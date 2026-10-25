@@ -15,10 +15,12 @@ const ThreatTable = ({ threats = [], onViewDetails, onInvestigateIP }) => {
 
   if (!threats || threats.length === 0) {
     return (
-      <div className="py-12 flex flex-col items-center justify-center text-center text-cyber-muted font-mono-code space-y-2">
-        <ShieldCheck className="w-10 h-10 text-cyber-green/60" />
-        <p className="text-sm text-cyber-text">No security incidents detected</p>
-        <p className="text-xs text-cyber-muted">Network traffic is currently clean and within safe baseline parameters.</p>
+      <div className="py-12 flex flex-col items-center justify-center text-center text-[#B8C5D8] font-mono-code space-y-2">
+        <div className="p-3 rounded-full bg-[#43D6A5]/10 border border-[#43D6A5]/30">
+          <ShieldCheck className="w-8 h-8 text-[#43D6A5]" />
+        </div>
+        <p className="text-sm font-semibold text-[#F3F6FC]">No security incidents detected</p>
+        <p className="text-xs text-[#B8C5D8]">Network traffic is currently clean and within safe baseline parameters.</p>
       </div>
     );
   }
@@ -27,7 +29,7 @@ const ThreatTable = ({ threats = [], onViewDetails, onInvestigateIP }) => {
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs font-mono-code border-collapse">
         <thead>
-          <tr className="border-b border-cyber-border/40 text-cyber-muted uppercase text-[11px] tracking-wider bg-cyber-panel/50">
+          <tr className="border-b border-[#364D6E]/60 text-[#B8C5D8] uppercase text-[11px] tracking-wider bg-[#1E2F46]/80">
             <th className="py-3 px-4 font-semibold">Timestamp</th>
             <th className="py-3 px-4 font-semibold">Source IP</th>
             <th className="py-3 px-4 font-semibold">Destination</th>
@@ -38,50 +40,50 @@ const ThreatTable = ({ threats = [], onViewDetails, onInvestigateIP }) => {
             <th className="py-3 px-4 font-semibold text-right">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-cyber-border/20">
+        <tbody className="divide-y divide-[#364D6E]/30">
           {threats.map((t) => {
             const isBlocked = t.response_status && t.response_status.includes('blocked');
             return (
               <tr
                 key={t.id}
-                className="hover:bg-cyber-panel/60 transition-colors group"
+                className="hover:bg-[#253750]/60 transition-colors group"
               >
-                <td className="py-3 px-4 text-cyber-muted whitespace-nowrap">
+                <td className="py-3 px-4 text-[#B8C5D8] whitespace-nowrap">
                   {formatTime(t.timestamp)}
                 </td>
 
                 <td className="py-3 px-4 whitespace-nowrap">
                   <button
                     onClick={() => onInvestigateIP && onInvestigateIP(t.src_ip)}
-                    className="font-bold text-cyber-cyan hover:underline decoration-cyber-cyan/50 hover:text-cyan-300 transition-colors"
+                    className="font-bold text-[#43D6C5] hover:text-[#5B8DEF] hover:underline transition-colors"
                     title="Investigate IP in Threat Intelligence"
                   >
                     {t.src_ip}
                   </button>
-                  {t.src_port && <span className="text-cyber-muted/60 text-[10px]">:{t.src_port}</span>}
+                  {t.src_port && <span className="text-[#B8C5D8]/60 text-[10px]">:{t.src_port}</span>}
                 </td>
 
-                <td className="py-3 px-4 text-cyber-muted whitespace-nowrap">
+                <td className="py-3 px-4 text-[#B8C5D8] whitespace-nowrap">
                   {t.dst_ip ? (
                     <span>
                       {t.dst_ip}
-                      {t.dst_port && <span className="text-cyber-muted/60 text-[10px]">:{t.dst_port}</span>}
+                      {t.dst_port && <span className="text-[#B8C5D8]/60 text-[10px]">:{t.dst_port}</span>}
                     </span>
                   ) : (
                     '--'
                   )}
                 </td>
 
-                <td className="py-3 px-4 text-cyber-text whitespace-nowrap">
-                  <span className="font-semibold text-white/90">{t.threat_type}</span>
+                <td className="py-3 px-4 text-[#F3F6FC] whitespace-nowrap">
+                  <span className="font-semibold">{t.threat_type}</span>
                   {t.protocol && (
-                    <span className="ml-1.5 px-1.5 py-0.5 rounded text-[10px] bg-cyber-card border border-cyber-border/40 text-cyber-muted">
+                    <span className="ml-1.5 px-1.5 py-0.5 rounded text-[10px] bg-[#1E2F46] border border-[#364D6E]/60 text-[#B8C5D8]">
                       {t.protocol}
                     </span>
                   )}
                 </td>
 
-                <td className="py-3 px-4 font-bold text-cyber-text whitespace-nowrap">
+                <td className="py-3 px-4 font-bold text-[#F3F6FC] whitespace-nowrap">
                   {t.count || 1}
                 </td>
 
@@ -90,10 +92,10 @@ const ThreatTable = ({ threats = [], onViewDetails, onInvestigateIP }) => {
                 </td>
 
                 <td className="py-3 px-4 whitespace-nowrap">
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
+                  <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[10px] font-semibold uppercase ${
                     isBlocked
-                      ? 'bg-red-500/10 text-cyber-red border border-cyber-red/30'
-                      : 'bg-cyber-panel text-cyber-muted border border-cyber-border/30'
+                      ? 'bg-[#FF7185]/15 text-[#FF7185] border border-[#FF7185]/30'
+                      : 'bg-[#1E2F46] text-[#B8C5D8] border border-[#364D6E]/40'
                   }`}>
                     {isBlocked ? <ShieldAlert className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
                     {t.response_status || 'monitored'}
@@ -103,7 +105,7 @@ const ThreatTable = ({ threats = [], onViewDetails, onInvestigateIP }) => {
                 <td className="py-3 px-4 text-right whitespace-nowrap">
                   <button
                     onClick={() => onViewDetails && onViewDetails(t)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-cyber-card hover:bg-cyber-cyan hover:text-black border border-cyber-border/40 hover:border-cyber-cyan text-cyber-text transition-all shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#253750] hover:bg-[#5B8DEF] hover:text-[#F3F6FC] border border-[#364D6E]/60 hover:border-[#5B8DEF] text-[#F3F6FC] transition-all shadow-neumorph-sm font-medium"
                   >
                     <Eye className="w-3.5 h-3.5" />
                     <span>Details</span>

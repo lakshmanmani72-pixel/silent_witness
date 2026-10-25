@@ -14,17 +14,17 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     const formattedTime = label ? new Date(label).toLocaleTimeString() : '';
     return (
-      <div className="bg-cyber-panel/95 border border-cyber-border/60 p-3 rounded-lg shadow-2xl backdrop-blur-md text-xs font-mono-code space-y-1.5">
-        <p className="text-cyber-muted font-bold pb-1 border-b border-cyber-border/30">
-          Timestamp: {formattedTime || label}
+      <div className="bg-[#1E2F46]/95 border border-[#5B8DEF]/30 p-3 rounded-xl shadow-2xl backdrop-blur-md text-xs font-mono-code space-y-1.5">
+        <p className="text-[#B8C5D8] font-semibold pb-1.5 border-b border-white/[0.08]">
+          Telemetry Timestamp: {formattedTime || label}
         </p>
         {payload.map((item, index) => (
           <div key={index} className="flex items-center justify-between gap-4">
-            <span className="flex items-center gap-1.5 text-cyber-text" style={{ color: item.color }}>
+            <span className="flex items-center gap-1.5" style={{ color: item.color }}>
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
               {item.name}:
             </span>
-            <span className="font-bold text-cyber-text">
+            <span className="font-bold text-[#F3F6FC]">
               {item.value.toLocaleString()}
             </span>
           </div>
@@ -54,28 +54,35 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
   };
 
   return (
-    <div className="bg-cyber-card border border-cyber-border rounded-xl p-5 shadow-lg relative">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+    <div className="bg-[#2B3F59]/80 backdrop-blur-md border border-[#364D6E]/70 rounded-xl p-5 shadow-aurora-card relative overflow-hidden">
+      {/* Top subtle aurora gradient line */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#5B8DEF] via-[#43D6C5] to-[#B3A0FF] opacity-60" />
+
+      {/* Blueprint technical corner markers */}
+      <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-white/20 pointer-events-none" />
+      <div className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 border-b border-r border-white/20 pointer-events-none" />
+
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-cyber-text font-mono-code flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse" />
+          <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#F3F6FC] font-mono-code flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#43D6C5] shadow-[0_0_8px_#43D6C5]" />
             Network Traffic Volume & Threat Rate
           </h3>
-          <p className="text-xs text-cyber-muted mt-0.5">
-            Real-time packet inspection & telemetry
+          <p className="text-xs text-[#B8C5D8] mt-0.5">
+            Real-time packet inspection & telemetry throughput
           </p>
         </div>
 
-        {/* Time-range pills */}
-        <div className="flex items-center gap-1 bg-cyber-panel p-1 rounded-lg border border-cyber-border/40 font-mono-code text-xs">
+        {/* Time-range pills with soft neumorphism */}
+        <div className="flex items-center gap-1 bg-[#1E2F46] p-1 rounded-lg border border-[#364D6E]/50 font-mono-code text-xs shadow-neumorph-inset">
           {ranges.map((r) => (
             <button
               key={r.value}
               onClick={() => onTimeRangeChange && onTimeRangeChange(r.value)}
-              className={`px-2.5 py-1 rounded transition-all ${
+              className={`px-3 py-1 rounded transition-all text-xs font-semibold ${
                 timeRange === r.value
-                  ? 'bg-cyber-cyan text-black font-bold shadow-cyan-glow'
-                  : 'text-cyber-muted hover:text-cyber-text hover:bg-cyber-card/60'
+                  ? 'bg-[#5B8DEF] text-[#F3F6FC] shadow-[0_0_12px_rgba(91,141,239,0.35)]'
+                  : 'text-[#B8C5D8] hover:text-[#F3F6FC] hover:bg-[#253750]'
               }`}
             >
               {r.label}
@@ -86,8 +93,8 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
 
       <div className="h-64 sm:h-72 w-full">
         {data.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-cyber-muted text-xs font-mono-code space-y-2">
-            <span className="w-8 h-8 rounded-full border border-dashed border-cyber-cyan/40 animate-spin" />
+          <div className="h-full flex flex-col items-center justify-center text-[#B8C5D8] text-xs font-mono-code space-y-2">
+            <span className="w-8 h-8 rounded-full border border-dashed border-[#43D6C5]/50 animate-spin" />
             <p>Awaiting network telemetry packets...</p>
           </div>
         ) : (
@@ -95,30 +102,30 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
             <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorPackets" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#00F5FF" stopOpacity={0.35} />
-                  <stop offset="95%" stopColor="#00F5FF" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#5B8DEF" stopOpacity={0.35} />
+                  <stop offset="95%" stopColor="#5B8DEF" stopOpacity={0.0} />
                 </linearGradient>
                 <linearGradient id="colorSuspicious" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#FFB020" stopOpacity={0.35} />
-                  <stop offset="95%" stopColor="#FFB020" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#F5BD61" stopOpacity={0.35} />
+                  <stop offset="95%" stopColor="#F5BD61" stopOpacity={0.0} />
                 </linearGradient>
                 <linearGradient id="colorThreats" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#FF355E" stopOpacity={0.45} />
-                  <stop offset="95%" stopColor="#FF355E" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#FF7185" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#FF7185" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
 
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 245, 255, 0.07)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(91, 141, 239, 0.10)" vertical={false} />
               <XAxis
                 dataKey="timestamp"
                 tickFormatter={formatXAxis}
-                stroke="#64748B"
-                tick={{ fill: '#64748B', fontSize: 10, fontFamily: 'monospace' }}
+                stroke="#364D6E"
+                tick={{ fill: '#B8C5D8', fontSize: 10, fontFamily: 'monospace' }}
                 tickLine={false}
               />
               <YAxis
-                stroke="#64748B"
-                tick={{ fill: '#64748B', fontSize: 10, fontFamily: 'monospace' }}
+                stroke="#364D6E"
+                tick={{ fill: '#B8C5D8', fontSize: 10, fontFamily: 'monospace' }}
                 tickLine={false}
               />
               <Tooltip content={<CustomTooltip />} />
@@ -133,7 +140,7 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
                 type="monotone"
                 dataKey="packets_observed"
                 name="Total Packets"
-                stroke="#00F5FF"
+                stroke="#5B8DEF"
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorPackets)"
@@ -142,7 +149,7 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
                 type="monotone"
                 dataKey="suspicious_packets"
                 name="Suspicious"
-                stroke="#FFB020"
+                stroke="#F5BD61"
                 strokeWidth={1.5}
                 fillOpacity={1}
                 fill="url(#colorSuspicious)"
@@ -151,7 +158,7 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
                 type="monotone"
                 dataKey="threats_detected"
                 name="Threats Detected"
-                stroke="#FF355E"
+                stroke="#FF7185"
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorThreats)"

@@ -41,7 +41,7 @@ function App() {
 
   return (
     <Router>
-      <div className="flex min-h-screen bg-cyber-bg text-cyber-text cyber-grid">
+      <div className="flex min-h-screen bg-[#18263B] text-[#F3F6FC] blueprint-grid">
         {/* Fixed Left Navigation Sidebar */}
         <Sidebar isConnected={isConnected} mode={monitoringMode} />
 
@@ -55,11 +55,11 @@ function App() {
 
           {/* Backend offline warning banner */}
           {!isConnected && (
-            <div className="bg-cyber-red/20 border-b border-cyber-red text-cyber-red px-6 py-2 text-xs font-mono-code flex items-center justify-between">
+            <div className="bg-[#FF7185]/15 border-b border-[#FF7185]/40 text-[#FF7185] px-6 py-2 text-xs font-mono-code flex items-center justify-between shadow-sm">
               <span>
                 <strong>ALERT:</strong> Cannot connect to Silent Witness Python backend on http://127.0.0.1:8000. Ensure Uvicorn is running.
               </span>
-              <span className="animate-pulse">RETRYING...</span>
+              <span className="animate-pulse font-bold">RETRYING LINK...</span>
             </div>
           )}
 

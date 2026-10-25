@@ -14,7 +14,7 @@ import {
   WifiOff,
 } from 'lucide-react';
 
-const Sidebar = ({ isLive, isConnected, mode = 'simulation' }) => {
+const Sidebar = ({ isConnected, mode = 'simulation' }) => {
   const navItems = [
     { name: 'Overview', path: '/', icon: Activity },
     { name: 'Live Threat Monitor', path: '/threats', icon: Radio },
@@ -27,20 +27,20 @@ const Sidebar = ({ isLive, isConnected, mode = 'simulation' }) => {
   ];
 
   return (
-    <aside className="w-64 bg-cyber-secondary border-r border-cyber-border flex flex-col justify-between shrink-0 h-screen sticky top-0 z-30 select-none">
+    <aside className="w-64 bg-[#253750] border-r border-[#364D6E]/60 flex flex-col justify-between shrink-0 h-screen sticky top-0 z-30 select-none shadow-[4px_0_24px_rgba(10,18,30,0.3)]">
       {/* Top Branding */}
       <div>
-        <div className="p-5 border-b border-cyber-border/40 flex items-center gap-3">
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan shadow-cyan-glow">
-            <ShieldAlert className="w-6 h-6 animate-pulse-subtle" />
-            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyber-cyan animate-ping" />
+        <div className="p-5 border-b border-[#364D6E]/50 flex items-center gap-3 bg-gradient-to-b from-[#2B3F59]/40 to-transparent">
+          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-[#5B8DEF]/20 to-[#43D6C5]/20 border border-[#5B8DEF]/35 text-[#43D6C5] shadow-[0_0_15px_rgba(91,141,239,0.2)]">
+            <ShieldAlert className="w-5 h-5 text-[#5B8DEF]" />
+            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#43D6C5] shadow-[0_0_8px_#43D6C5]" />
           </div>
           <div>
-            <h1 className="text-base font-bold tracking-wider text-cyber-text flex items-center gap-1.5 font-mono-code">
-              SILENT<span className="text-cyber-cyan">WITNESS</span>
+            <h1 className="text-sm font-bold tracking-wider text-[#F3F6FC] flex items-center gap-1 font-mono-code">
+              SILENT<span className="text-[#43D6C5]">WITNESS</span>
             </h1>
-            <p className="text-[10px] uppercase tracking-widest text-cyber-muted font-mono-code">
-              Network Defense SOC
+            <p className="text-[10px] uppercase tracking-widest text-[#B8C5D8] font-mono-code">
+              Hybrid Aurora SOC
             </p>
           </div>
         </div>
@@ -54,10 +54,10 @@ const Sidebar = ({ isLive, isConnected, mode = 'simulation' }) => {
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 relative group ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all duration-200 relative group ${
                     isActive
-                      ? 'bg-cyber-panel text-cyber-cyan border border-cyber-cyan/30 shadow-[0_0_15px_rgba(0,245,255,0.15)] font-semibold'
-                      : 'text-cyber-muted hover:text-cyber-text hover:bg-cyber-card/60 border border-transparent'
+                      ? 'bg-[#2B3F59] text-[#F3F6FC] border border-[#5B8DEF]/35 shadow-neumorph-sm font-semibold'
+                      : 'text-[#B8C5D8] hover:text-[#F3F6FC] hover:bg-[#2B3F59]/50 border border-transparent'
                   }`
                 }
               >
@@ -65,10 +65,10 @@ const Sidebar = ({ isLive, isConnected, mode = 'simulation' }) => {
                   <>
                     {/* Active left indicator pill */}
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-cyber-cyan rounded-r shadow-cyan-glow" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[#43D6C5] rounded-r shadow-[0_0_8px_#43D6C5]" />
                     )}
-                    <Icon className={`w-4 h-4 transition-transform group-hover:scale-110 ${isActive ? 'text-cyber-cyan' : 'text-cyber-muted'}`} />
-                    <span>{item.name}</span>
+                    <Icon className={`w-4 h-4 transition-transform group-hover:scale-105 ${isActive ? 'text-[#43D6C5]' : 'text-[#B8C5D8]'}`} />
+                    <span className="tracking-wide">{item.name}</span>
                   </>
                 )}
               </NavLink>
@@ -78,37 +78,37 @@ const Sidebar = ({ isLive, isConnected, mode = 'simulation' }) => {
       </div>
 
       {/* Bottom Status Panel */}
-      <div className="p-4 border-t border-cyber-border/40 bg-cyber-bg/50 space-y-3 font-mono-code text-xs">
+      <div className="p-4 border-t border-[#364D6E]/50 bg-[#1E2F46]/60 backdrop-blur-sm space-y-3 font-mono-code text-xs m-3 rounded-xl border">
         {/* Connection status */}
         <div className="flex items-center justify-between">
-          <span className="text-cyber-muted flex items-center gap-1.5">
+          <span className="text-[#B8C5D8] flex items-center gap-1.5 text-[11px]">
             {isConnected ? (
-              <Wifi className="w-3.5 h-3.5 text-cyber-green" />
+              <Wifi className="w-3.5 h-3.5 text-[#43D6A5]" />
             ) : (
-              <WifiOff className="w-3.5 h-3.5 text-cyber-red" />
+              <WifiOff className="w-3.5 h-3.5 text-[#FF7185]" />
             )}
-            Backend:
+            Engine Link:
           </span>
-          <span className={`font-semibold ${isConnected ? 'text-cyber-green' : 'text-cyber-red'}`}>
+          <span className={`text-[11px] font-bold ${isConnected ? 'text-[#43D6A5]' : 'text-[#FF7185]'}`}>
             {isConnected ? 'ONLINE' : 'OFFLINE'}
           </span>
         </div>
 
         {/* Monitoring mode badge */}
-        <div className="flex items-center justify-between pt-1 border-t border-cyber-border/20">
-          <span className="text-cyber-muted">Engine Mode:</span>
+        <div className="flex items-center justify-between pt-1 border-t border-[#364D6E]/40">
+          <span className="text-[#B8C5D8] text-[11px]">Mode:</span>
           <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
             mode === 'live'
-              ? 'bg-cyber-green/10 text-cyber-green border border-cyber-green/30'
-              : 'bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/30 shadow-[0_0_8px_rgba(0,245,255,0.2)]'
+              ? 'bg-[#43D6A5]/15 text-[#43D6A5] border border-[#43D6A5]/30'
+              : 'bg-[#5B8DEF]/15 text-[#5B8DEF] border border-[#5B8DEF]/30'
           }`}>
             {mode === 'live' ? 'LIVE MONITOR' : 'DEMO SIMULATION'}
           </span>
         </div>
 
         {/* Status notice */}
-        <div className="text-[10px] text-cyber-muted/80 text-center leading-tight">
-          Defensive Project &bull; Safe Dry-Run
+        <div className="text-[10px] text-[#B8C5D8]/70 text-center leading-tight pt-1">
+          Academic Project &bull; Safe Dry-Run
         </div>
       </div>
     </aside>

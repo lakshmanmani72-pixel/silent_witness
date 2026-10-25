@@ -15,6 +15,17 @@ import {
   Wifi,
   Radio,
   ExternalLink,
+  Server,
+  Laptop,
+  Cpu,
+  Layers,
+  Shield,
+  ArrowRight,
+  Lock,
+  Unlock,
+  CheckCircle2,
+  ChevronRight,
+  Terminal,
 } from 'lucide-react';
 import StatCard from '../components/StatCard';
 import TrafficChart from '../components/TrafficChart';
@@ -50,6 +61,7 @@ const Dashboard = () => {
   // Selected threat for inspection modal
   const [selectedThreat, setSelectedThreat] = useState(null);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [selectedNode, setSelectedNode] = useState('gateway');
   const [loading, setLoading] = useState(true);
 
   // Fetch all dashboard data
@@ -161,121 +173,146 @@ const Dashboard = () => {
     }
   };
 
+  // Extract observed attacker IPs from live data
+  const observedAttackers = Array.from(
+    new Set(recentEvents.map((e) => e.src_ip).filter(Boolean))
+  ).slice(0, 3);
+
+  const activeAttackerIP = observedAttackers[0] || '10.0.0.99';
+
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      {/* ── A. Welcome & Control Section ───────────────────────────────────── */}
-      <div className="relative bg-cyber-card border border-cyber-border rounded-xl p-6 shadow-xl overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        {/* Glow corner accent */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-cyber-cyan/5 rounded-full blur-3xl pointer-events-none" />
+    <div className="p-6 space-y-6 max-w-7xl mx-auto font-sans">
+      {/* ── BENTO 1: Executive Master Control Bar ─────────────────────────────── */}
+      <div className="relative bg-[#2B3F59]/80 backdrop-blur-md border border-[#364D6E]/70 rounded-2xl p-6 shadow-aurora-card overflow-hidden">
+        {/* Subtle Aurora Ambient Radial Glow */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#5B8DEF]/10 via-[#43D6C5]/5 to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-[#B3A0FF]/5 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="space-y-1 z-10">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-mono-code">
-              Security Operations Center
-            </h1>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono-code font-bold bg-cyber-panel border border-cyber-border/60 text-cyber-cyan">
-              SOC TIER-1
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-cyber-muted italic font-sans">
-            "Monitor. Detect. Respond. Protect."
-          </p>
-        </div>
+        {/* Blueprint corner crosshairs */}
+        <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-[#43D6C5]/40" />
+        <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-[#43D6C5]/40" />
+        <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-[#43D6C5]/40" />
+        <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-[#43D6C5]/40" />
 
-        {/* Master Control Buttons */}
-        <div className="flex flex-wrap items-center gap-3 z-10">
-          {/* Real-Time Live Wi-Fi vs. Demo Simulation Switcher */}
-          <div className="flex items-center gap-1 bg-cyber-panel border border-cyber-border/40 p-1 rounded-lg text-xs font-mono-code">
-            <button
-              onClick={handleSwitchToLive}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded transition-all font-bold ${
-                summary.monitoring_mode === 'live'
-                  ? 'bg-cyber-green text-black shadow-green-glow'
-                  : 'text-cyber-muted hover:text-white'
-              }`}
-              title="Capture and analyze real network packets from your active Wi-Fi interface"
-            >
-              <Wifi className="w-3.5 h-3.5" />
-              <span>Real-Time Live (Wi-Fi)</span>
-            </button>
-            <button
-              onClick={handleSwitchToSimulation}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded transition-all font-bold ${
-                summary.monitoring_mode === 'simulation'
-                  ? 'bg-cyber-cyan text-black shadow-cyan-glow'
-                  : 'text-cyber-muted hover:text-white'
-              }`}
-              title="Run synthetic attack demonstration scenarios"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Demo Mode</span>
-            </button>
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 z-10 relative">
+          <div className="space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#F3F6FC] font-mono-code">
+                Security Operations Center
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono-code font-bold bg-[#1E2F46] border border-[#5B8DEF]/35 text-[#43D6C5] shadow-neumorph-sm">
+                SOC TIER-1 WORKBENCH
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-[#B8C5D8] flex items-center gap-2">
+              <span className="text-[#43D6C5]">&bull;</span>
+              <span>Autonomous Network Intrusion Detection, Telemetry & Mitigation Matrix</span>
+            </p>
           </div>
 
-          <button
-            onClick={handleToggleMonitoring}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono-code font-bold transition-all shadow-md ${
-              summary.monitoring_active
-                ? 'bg-cyber-red/10 border border-cyber-red/50 text-cyber-red hover:bg-cyber-red hover:text-white shadow-red-glow'
-                : 'bg-cyber-green/10 border border-cyber-green/50 text-cyber-green hover:bg-cyber-green hover:text-black shadow-green-glow'
-            }`}
-          >
-            {summary.monitoring_active ? (
-              <>
-                <Square className="w-3.5 h-3.5 fill-current" />
-                <span>Stop Engine</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Start Engine</span>
-              </>
-            )}
-          </button>
+          {/* Master Control Suite with Soft Neumorphism */}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Real-Time Live Wi-Fi vs. Demo Simulation Switcher */}
+            <div className="flex items-center gap-1 bg-[#1E2F46] border border-[#364D6E]/60 p-1 rounded-xl text-xs font-mono-code shadow-neumorph-inset">
+              <button
+                onClick={handleSwitchToLive}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-xs font-semibold ${
+                  summary.monitoring_mode === 'live'
+                    ? 'bg-[#43D6A5] text-[#18263B] shadow-[0_0_15px_rgba(67,214,165,0.35)] font-bold'
+                    : 'text-[#B8C5D8] hover:text-[#F3F6FC] hover:bg-[#253750]'
+                }`}
+                title="Capture and analyze real network packets from active network adapter"
+              >
+                <Wifi className="w-3.5 h-3.5" />
+                <span>Live Sniffer</span>
+              </button>
 
-          {/* Simulation fast control pills */}
-          <div className="flex items-center gap-1 bg-cyber-panel border border-cyber-border/40 p-1 rounded-lg text-xs font-mono-code">
+              <button
+                onClick={handleSwitchToSimulation}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-xs font-semibold ${
+                  summary.monitoring_mode === 'simulation'
+                    ? 'bg-[#5B8DEF] text-[#F3F6FC] shadow-[0_0_15px_rgba(91,141,239,0.35)] font-bold'
+                    : 'text-[#B8C5D8] hover:text-[#F3F6FC] hover:bg-[#253750]'
+                }`}
+                title="Run synthetic attack demonstration scenarios"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Demo Mode</span>
+              </button>
+            </div>
+
+            {/* Engine Start/Stop Button */}
             <button
-              onClick={handleSimPause}
-              className={`p-1.5 rounded hover:bg-cyber-card transition-colors ${
-                simStatus?.paused ? 'text-cyber-amber font-bold' : 'text-cyber-muted'
+              onClick={handleToggleMonitoring}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono-code font-bold transition-all shadow-md ${
+                summary.monitoring_active
+                  ? 'bg-[#FF7185]/15 border border-[#FF7185]/40 text-[#FF7185] hover:bg-[#FF7185] hover:text-white shadow-[0_0_15px_rgba(255,113,133,0.25)]'
+                  : 'bg-[#43D6A5]/15 border border-[#43D6A5]/40 text-[#43D6A5] hover:bg-[#43D6A5] hover:text-[#18263B] shadow-[0_0_15px_rgba(67,214,165,0.25)]'
               }`}
-              title={simStatus?.paused ? 'Resume Simulation' : 'Pause Simulation'}
             >
-              {simStatus?.paused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
+              {summary.monitoring_active ? (
+                <>
+                  <Square className="w-3.5 h-3.5 fill-current" />
+                  <span>Stop Engine</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>Start Engine</span>
+                </>
+              )}
             </button>
-            <div className="h-4 w-px bg-cyber-border/40 mx-0.5" />
-            <button
-              onClick={() => handleSimSpeed(1.0)}
-              className={`px-2 py-0.5 rounded ${simStatus?.speed === 1.0 ? 'bg-cyber-cyan text-black font-bold' : 'text-cyber-muted'}`}
-            >
-              1×
-            </button>
-            <button
-              onClick={() => handleSimSpeed(2.5)}
-              className={`px-2 py-0.5 rounded ${simStatus?.speed === 2.5 ? 'bg-cyber-cyan text-black font-bold' : 'text-cyber-muted'}`}
-            >
-              2.5×
-            </button>
-            <button
-              onClick={() => handleSimSpeed(5.0)}
-              className={`px-2 py-0.5 rounded ${simStatus?.speed === 5.0 ? 'bg-cyber-cyan text-black font-bold' : 'text-cyber-muted'}`}
-            >
-              5×
-            </button>
-            <div className="h-4 w-px bg-cyber-border/40 mx-0.5" />
-            <button
-              onClick={() => setIsResetModalOpen(true)}
-              className="p-1.5 rounded hover:bg-cyber-card text-cyber-muted hover:text-cyber-red transition-colors"
-              title="Reset Simulation Data"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-            </button>
+
+            {/* Simulation Speed & Controls Pill */}
+            <div className="flex items-center gap-1 bg-[#1E2F46] border border-[#364D6E]/60 p-1 rounded-xl text-xs font-mono-code shadow-neumorph-inset">
+              <button
+                onClick={handleSimPause}
+                className={`p-1.5 rounded-lg hover:bg-[#253750] transition-colors ${
+                  simStatus?.paused ? 'text-[#F5BD61] font-bold' : 'text-[#B8C5D8]'
+                }`}
+                title={simStatus?.paused ? 'Resume Simulation' : 'Pause Simulation'}
+              >
+                {simStatus?.paused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
+              </button>
+              <div className="h-4 w-px bg-[#364D6E]/60 mx-0.5" />
+              <button
+                onClick={() => handleSimSpeed(1.0)}
+                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
+                  simStatus?.speed === 1.0 ? 'bg-[#5B8DEF] text-white font-bold' : 'text-[#B8C5D8] hover:text-[#F3F6FC]'
+                }`}
+              >
+                1×
+              </button>
+              <button
+                onClick={() => handleSimSpeed(2.5)}
+                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
+                  simStatus?.speed === 2.5 ? 'bg-[#5B8DEF] text-white font-bold' : 'text-[#B8C5D8] hover:text-[#F3F6FC]'
+                }`}
+              >
+                2.5×
+              </button>
+              <button
+                onClick={() => handleSimSpeed(5.0)}
+                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
+                  simStatus?.speed === 5.0 ? 'bg-[#5B8DEF] text-white font-bold' : 'text-[#B8C5D8] hover:text-[#F3F6FC]'
+                }`}
+              >
+                5×
+              </button>
+              <div className="h-4 w-px bg-[#364D6E]/60 mx-0.5" />
+              <button
+                onClick={() => setIsResetModalOpen(true)}
+                className="p-1.5 rounded-lg hover:bg-[#253750] text-[#B8C5D8] hover:text-[#FF7185] transition-colors"
+                title="Reset Simulation Data"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── B. 6 KPI Cards ─────────────────────────────────────────────────── */}
+      {/* ── BENTO 2: Bento Grid Key Performance Telemetry (6 Cards) ─────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <StatCard
           title="Total Threats"
@@ -283,20 +320,20 @@ const Dashboard = () => {
           subtitle="Events recorded"
           icon={ShieldAlert}
           color="cyan"
-          trend={{ direction: 'up', value: 'Live' }}
+          trend={{ direction: 'up', value: 'Live Feed' }}
         />
         <StatCard
-          title="Critical Threats"
+          title="Critical Alerts"
           value={summary.critical_threats?.toLocaleString()}
-          subtitle="Immediate triage"
+          subtitle="Immediate triage tier"
           icon={AlertOctagon}
           color="red"
-          trend={{ direction: 'up', value: 'High priority' }}
+          trend={{ direction: 'up', value: 'Priority' }}
         />
         <StatCard
           title="High Severity"
           value={summary.high_threats?.toLocaleString()}
-          subtitle="SYN / Port scans"
+          subtitle="SYN Floods / Port scans"
           icon={Flame}
           color="amber"
         />
@@ -319,11 +356,181 @@ const Dashboard = () => {
           value={formatUptime(summary.uptime_seconds)}
           subtitle="Continuous monitoring"
           icon={Clock}
-          color="cyan"
+          color="purple"
         />
       </div>
 
-      {/* ── C. Traffic Area Chart & Network Activity Panel ───────────────────── */}
+      {/* ── BENTO 3: Visual Centerpiece — Blueprint Network Topology Visualizer ─── */}
+      <div className="bg-[#2B3F59]/80 backdrop-blur-md border border-[#364D6E]/70 rounded-2xl p-6 shadow-aurora-card relative overflow-hidden">
+        {/* Top subtle aurora gradient accent */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#5B8DEF] via-[#43D6C5] to-[#B3A0FF]" />
+
+        {/* Header with technical workbench coordinates */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-white/[0.06]">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-[#5B8DEF]/15 border border-[#5B8DEF]/30 text-[#43D6C5] shadow-neumorph-sm">
+              <Layers className="w-5 h-5 text-[#43D6C5]" />
+            </div>
+            <div>
+              <h3 className="text-sm sm:text-base font-bold text-[#F3F6FC] font-mono-code flex items-center gap-2">
+                Blueprint-Style Network Topology & Real-Time Flow Visualizer
+              </h3>
+              <p className="text-xs text-[#B8C5D8] mt-0.5">
+                Physical sensor observation point, ingress traffic routing, containment barrier, and protected server endpoints
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-mono-code">
+            <span className="px-2.5 py-1 rounded-lg bg-[#1E2F46] border border-[#364D6E]/50 text-[#B8C5D8]">
+              LAT: <span className="text-[#43D6A5]">0.38 ms</span>
+            </span>
+            <span className="px-2.5 py-1 rounded-lg bg-[#1E2F46] border border-[#364D6E]/50 text-[#B8C5D8]">
+              FILTER: <span className="text-[#5B8DEF]">STRICT</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Blueprint Engineering Canvas */}
+        <div className="blueprint-canvas rounded-xl border border-[#364D6E]/60 p-6 relative overflow-x-auto min-h-[300px] flex flex-col justify-between shadow-inner">
+          {/* Subtle Technical Grid Overlay & Coordinate Labels */}
+          <div className="absolute top-2 left-3 text-[10px] font-mono-code text-[#5B8DEF]/50 tracking-widest pointer-events-none">
+            TOPOLOGY GRID: SEC-ZONE-01 // COORD [37.7749, -122.4194]
+          </div>
+          <div className="absolute top-2 right-3 text-[10px] font-mono-code text-[#43D6C5]/50 tracking-widest pointer-events-none">
+            PROTOCOL: TCP/IP STACK &bull; ICMP &bull; UDP
+          </div>
+
+          {/* Interactive Node Pipeline */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 relative z-10 my-4 items-center">
+            {/* Node 1: Ingress / Attacker Sources */}
+            <div
+              onClick={() => setSelectedNode('attacker')}
+              className={`p-4 rounded-xl border transition-all cursor-pointer relative ${
+                selectedNode === 'attacker'
+                  ? 'bg-[#1E2F46] border-[#FF7185] shadow-[0_0_15px_rgba(255,113,133,0.3)] ring-1 ring-[#FF7185]/50'
+                  : 'bg-[#1E2F46]/80 hover:bg-[#1E2F46] border-[#364D6E]/60 hover:border-[#FF7185]/40'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] uppercase font-mono-code font-bold text-[#FF7185] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF7185] animate-ping" />
+                  Ingress Attacker
+                </span>
+                <Laptop className="w-4 h-4 text-[#FF7185]" />
+              </div>
+              <p className="font-mono-code text-xs font-bold text-[#F3F6FC] truncate">
+                {activeAttackerIP}
+              </p>
+              <p className="text-[10px] text-[#B8C5D8] mt-1 font-mono-code">
+                Recon / SYN Flood Source
+              </p>
+              <div className="mt-3 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono-code">
+                <span className="text-[#B8C5D8]">Threat Count:</span>
+                <span className="text-[#FF7185] font-bold">{summary.total_threats || 0}</span>
+              </div>
+            </div>
+
+            {/* Connection Arrow 1 */}
+            <div className="hidden md:flex flex-col items-center justify-center text-[#43D6C5] font-mono-code text-[10px]">
+              <div className="w-full flex items-center justify-center relative">
+                <div className="h-[2px] w-full bg-gradient-to-r from-[#FF7185] to-[#43D6C5] opacity-60" />
+                <ArrowRight className="w-4 h-4 text-[#43D6C5] absolute right-0 -top-2 animate-pulse" />
+              </div>
+              <span className="text-[9px] text-[#B8C5D8] mt-1">Raw Ingress</span>
+            </div>
+
+            {/* Node 2: Sensor / Sniffer Gateway */}
+            <div
+              onClick={() => setSelectedNode('gateway')}
+              className={`p-4 rounded-xl border transition-all cursor-pointer relative ${
+                selectedNode === 'gateway'
+                  ? 'bg-[#1E2F46] border-[#43D6C5] shadow-[0_0_15px_rgba(67,214,197,0.3)] ring-1 ring-[#43D6C5]/50'
+                  : 'bg-[#1E2F46]/80 hover:bg-[#1E2F46] border-[#364D6E]/60 hover:border-[#43D6C5]/40'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] uppercase font-mono-code font-bold text-[#43D6C5] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#43D6C5] animate-pulse" />
+                  Sensor Sniffer
+                </span>
+                <Radio className="w-4 h-4 text-[#43D6C5]" />
+              </div>
+              <p className="font-mono-code text-xs font-bold text-[#F3F6FC]">
+                192.168.1.100
+              </p>
+              <p className="text-[10px] text-[#B8C5D8] mt-1 font-mono-code">
+                Promiscuous Wi-Fi Monitor
+              </p>
+              <div className="mt-3 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono-code">
+                <span className="text-[#B8C5D8]">Mode:</span>
+                <span className="text-[#43D6A5] font-bold uppercase">{summary.monitoring_mode}</span>
+              </div>
+            </div>
+
+            {/* Connection Arrow 2 */}
+            <div className="hidden md:flex flex-col items-center justify-center text-[#5B8DEF] font-mono-code text-[10px]">
+              <div className="w-full flex items-center justify-center relative">
+                <div className="h-[2px] w-full bg-gradient-to-r from-[#43D6C5] to-[#5B8DEF] opacity-60" />
+                <ArrowRight className="w-4 h-4 text-[#5B8DEF] absolute right-0 -top-2 animate-pulse" />
+              </div>
+              <span className="text-[9px] text-[#B8C5D8] mt-1">Inspection</span>
+            </div>
+
+            {/* Node 3: Automated Containment Firewall */}
+            <div
+              onClick={() => setSelectedNode('firewall')}
+              className={`p-4 rounded-xl border transition-all cursor-pointer relative ${
+                selectedNode === 'firewall'
+                  ? 'bg-[#1E2F46] border-[#5B8DEF] shadow-[0_0_15px_rgba(91,141,239,0.3)] ring-1 ring-[#5B8DEF]/50'
+                  : 'bg-[#1E2F46]/80 hover:bg-[#1E2F46] border-[#364D6E]/60 hover:border-[#5B8DEF]/40'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] uppercase font-mono-code font-bold text-[#5B8DEF] flex items-center gap-1">
+                  <Shield className="w-3.5 h-3.5" />
+                  Defense Barrier
+                </span>
+                <Lock className="w-4 h-4 text-[#5B8DEF]" />
+              </div>
+              <p className="font-mono-code text-xs font-bold text-[#F3F6FC]">
+                iptables Engine
+              </p>
+              <p className="text-[10px] text-[#B8C5D8] mt-1 font-mono-code">
+                Automated Containment
+              </p>
+              <div className="mt-3 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono-code">
+                <span className="text-[#B8C5D8]">Blocks Enforced:</span>
+                <span className="text-[#43D6A5] font-bold">{summary.active_blocked_ips || 0}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Blueprint Node Inspection Tray */}
+          <div className="mt-4 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4 text-xs font-mono-code">
+            <div className="flex flex-wrap items-center gap-3 text-[11px]">
+              <span className="text-[#B8C5D8]">Target Host:</span>
+              <span className="px-2 py-0.5 rounded bg-[#1E2F46] text-[#F3F6FC] border border-[#364D6E]/50">
+                127.0.0.1 (Loopback Protected)
+              </span>
+              <span className="text-[#B8C5D8] ml-2">Monitored Ports:</span>
+              <span className="px-2 py-0.5 rounded bg-[#1E2F46] text-[#43D6C5] border border-[#364D6E]/50">
+                80 (HTTP) &bull; 443 (HTTPS) &bull; 22 (SSH)
+              </span>
+            </div>
+
+            <button
+              onClick={() => navigate('/intelligence?ip=' + activeAttackerIP)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#253750] hover:bg-[#5B8DEF] hover:text-white border border-[#364D6E]/60 text-[#F3F6FC] text-xs transition-all shadow-neumorph-sm"
+            >
+              <span>Investigate Observed Source</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── BENTO 4: Traffic Volume Chart & Network Telemetry Panel ──────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3">
           <TrafficChart
@@ -333,49 +540,56 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* G. Network Activity Panel */}
-        <div className="bg-cyber-card border border-cyber-border rounded-xl p-5 shadow-lg flex flex-col justify-between">
+        {/* Telemetry Sensor Activity Panel */}
+        <div className="bg-[#2B3F59]/80 backdrop-blur-md border border-[#364D6E]/70 rounded-xl p-5 shadow-aurora-card flex flex-col justify-between relative overflow-hidden">
+          {/* Top subtle aurora gradient line */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#43D6C5] to-[#5B8DEF] opacity-60" />
+
+          {/* Blueprint technical corner markers */}
+          <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-white/20 pointer-events-none" />
+          <div className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 border-b border-r border-white/20 pointer-events-none" />
+
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-cyber-text font-mono-code flex items-center gap-2">
-              <Radio className="w-4 h-4 text-cyber-cyan animate-pulse" />
+            <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#F3F6FC] font-mono-code flex items-center gap-2">
+              <Radio className="w-4 h-4 text-[#43D6C5] animate-pulse" />
               Network Telemetry
             </h3>
-            <p className="text-xs text-cyber-muted mt-0.5">
-              Host sensor health & activity
+            <p className="text-xs text-[#B8C5D8] mt-0.5">
+              Host sniffer sensor health & activity
             </p>
 
             <div className="mt-5 space-y-3.5 font-mono-code text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-cyber-border/20">
-                <span className="text-cyber-muted">Status:</span>
-                <span className={`font-bold ${summary.monitoring_active ? 'text-cyber-green' : 'text-cyber-red'}`}>
+              <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+                <span className="text-[#B8C5D8]">Engine Status:</span>
+                <span className={`font-bold ${summary.monitoring_active ? 'text-[#43D6A5]' : 'text-[#FF7185]'}`}>
                   {summary.monitoring_active ? 'ACTIVE' : 'STOPPED'}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between pb-2 border-b border-cyber-border/20">
-                <span className="text-cyber-muted">Packets Observed:</span>
-                <span className="text-cyber-text font-bold">
+              <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+                <span className="text-[#B8C5D8]">Packets Observed:</span>
+                <span className="text-[#F3F6FC] font-bold">
                   {(networkActivity?.packets_observed || 0).toLocaleString()}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between pb-2 border-b border-cyber-border/20">
-                <span className="text-cyber-muted">Unique Source IPs:</span>
-                <span className="text-cyber-cyan font-bold">
+              <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+                <span className="text-[#B8C5D8]">Unique Source IPs:</span>
+                <span className="text-[#43D6C5] font-bold">
                   {networkActivity?.unique_sources || 0}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between pb-2 border-b border-cyber-border/20">
-                <span className="text-cyber-muted">Suspicious Sources:</span>
-                <span className="text-cyber-amber font-bold">
+              <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+                <span className="text-[#B8C5D8]">Suspicious Packets:</span>
+                <span className="text-[#F5BD61] font-bold">
                   {(networkActivity?.suspicious_packets || 0).toLocaleString()}
                 </span>
               </div>
 
               <div className="flex items-center justify-between pb-1">
-                <span className="text-cyber-muted">Last Incident:</span>
-                <span className="text-cyber-text text-[11px] truncate max-w-[130px]">
+                <span className="text-[#B8C5D8]">Last Incident:</span>
+                <span className="text-[#F3F6FC] text-[11px] truncate max-w-[130px]">
                   {summary.last_detection
                     ? new Date(summary.last_detection).toLocaleTimeString()
                     : 'None'}
@@ -384,10 +598,10 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-cyber-border/30">
+          <div className="mt-6 pt-4 border-t border-white/[0.06]">
             <button
               onClick={() => navigate('/threats')}
-              className="w-full py-2 px-3 rounded-lg bg-cyber-panel hover:bg-cyber-cyan hover:text-black border border-cyber-border/40 text-cyber-text text-xs font-mono-code font-semibold flex items-center justify-center gap-1.5 transition-all shadow-sm"
+              className="w-full py-2.5 px-3 rounded-lg bg-[#253750] hover:bg-[#5B8DEF] hover:text-[#F3F6FC] border border-[#364D6E]/60 text-[#F3F6FC] text-xs font-mono-code font-semibold flex items-center justify-center gap-1.5 transition-all shadow-neumorph-sm"
             >
               <span>Inspect Live Threat Stream</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -396,28 +610,31 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* ── D & E. Threat Donut and Severity Bar Charts ─────────────────────── */}
+      {/* ── BENTO 5: Threat Vector Distribution & Severity Classification ────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ThreatDonutChart data={threatTypes} />
         <SeverityBarChart data={severityDist} />
       </div>
 
-      {/* ── F. Recent Security Events Table ─────────────────────────────────── */}
-      <div className="bg-cyber-card border border-cyber-border rounded-xl p-5 shadow-lg">
+      {/* ── BENTO 6: Recent Security Events Table ────────────────────────────── */}
+      <div className="bg-[#2B3F59]/80 backdrop-blur-md border border-[#364D6E]/70 rounded-xl p-5 shadow-aurora-card relative overflow-hidden">
+        {/* Top subtle aurora gradient line */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#5B8DEF] via-[#43D6C5] to-[#B3A0FF] opacity-60" />
+
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-cyber-text font-mono-code flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-cyber-cyan" />
+            <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#F3F6FC] font-mono-code flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#43D6C5] shadow-[0_0_8px_#43D6C5]" />
               Recent Security Events
             </h3>
-            <p className="text-xs text-cyber-muted mt-0.5">
+            <p className="text-xs text-[#B8C5D8] mt-0.5">
               Near-real-time triage log of incoming detections
             </p>
           </div>
 
           <button
             onClick={() => navigate('/threats')}
-            className="text-xs font-mono-code text-cyber-cyan hover:underline flex items-center gap-1"
+            className="text-xs font-mono-code text-[#43D6C5] hover:text-[#5B8DEF] hover:underline flex items-center gap-1"
           >
             <span>View All In Live Monitor</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -431,70 +648,72 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* ── Event Details Inspection Modal ─────────────────────────────────── */}
+      {/* ── Event Details Inspection Modal (Hybrid Aurora Frosted Glass) ──────── */}
       {selectedThreat && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="relative w-full max-w-lg bg-cyber-card border border-cyber-border rounded-xl shadow-2xl p-6">
-            <div className="flex items-center justify-between pb-3 border-b border-cyber-border/40 mb-4">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyber-red animate-ping" />
-                <h3 className="text-base font-bold text-cyber-text font-mono-code">
-                  Incident #{selectedThreat.id} Details
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-lg bg-[#253750] border border-[#364D6E]/80 rounded-2xl shadow-2xl p-6 overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF7185] to-[#5B8DEF]" />
+
+            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-4">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#FF7185] animate-ping" />
+                <h3 className="text-base font-bold text-[#F3F6FC] font-mono-code">
+                  Incident #{selectedThreat.id} Telemetry Dossier
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedThreat(null)}
-                className="text-cyber-muted hover:text-white"
+                className="text-[#B8C5D8] hover:text-[#F3F6FC] text-lg font-bold p-1 rounded-lg hover:bg-[#1E2F46]"
               >
                 &times;
               </button>
             </div>
 
             <div className="space-y-3 font-mono-code text-xs">
-              <div className="grid grid-cols-2 gap-2 bg-cyber-panel/60 p-3 rounded-lg border border-cyber-border/30">
+              <div className="grid grid-cols-2 gap-2 bg-[#1E2F46] p-3.5 rounded-xl border border-[#364D6E]/50 shadow-neumorph-inset">
                 <div>
-                  <span className="text-cyber-muted">Source IP:</span>
-                  <p className="text-cyber-cyan font-bold text-sm mt-0.5">{selectedThreat.src_ip}</p>
+                  <span className="text-[#B8C5D8] text-[11px]">Source IP:</span>
+                  <p className="text-[#43D6C5] font-bold text-sm mt-0.5">{selectedThreat.src_ip}</p>
                 </div>
                 <div>
-                  <span className="text-cyber-muted">Destination IP:</span>
-                  <p className="text-cyber-text text-sm mt-0.5">{selectedThreat.dst_ip || 'Host System'}</p>
+                  <span className="text-[#B8C5D8] text-[11px]">Destination IP:</span>
+                  <p className="text-[#F3F6FC] text-sm mt-0.5">{selectedThreat.dst_ip || 'Host System'}</p>
                 </div>
                 <div>
-                  <span className="text-cyber-muted">Threat Vector:</span>
-                  <p className="text-white font-bold mt-0.5">{selectedThreat.threat_type}</p>
+                  <span className="text-[#B8C5D8] text-[11px]">Threat Vector:</span>
+                  <p className="text-[#FF7185] font-bold mt-0.5">{selectedThreat.threat_type}</p>
                 </div>
                 <div>
-                  <span className="text-cyber-muted">Packet Count:</span>
-                  <p className="text-cyber-text font-bold mt-0.5">{selectedThreat.count || 1}</p>
+                  <span className="text-[#B8C5D8] text-[11px]">Packet Count:</span>
+                  <p className="text-[#F3F6FC] font-bold mt-0.5">{selectedThreat.count || 1}</p>
                 </div>
               </div>
 
               <div>
-                <span className="text-cyber-muted block mb-1">Detection Logic / Rule Triggered:</span>
-                <p className="p-3 rounded-lg bg-cyber-bg border border-cyber-border/40 text-cyber-muted leading-relaxed font-sans">
+                <span className="text-[#B8C5D8] block mb-1">Detection Logic / Rule Triggered:</span>
+                <p className="p-3 rounded-xl bg-[#18263B] border border-[#364D6E]/50 text-[#B8C5D8] leading-relaxed font-sans text-xs">
                   {selectedThreat.detection_reason || 'Threshold-based packet inspection triggered alert.'}
                 </p>
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <span className="text-cyber-muted">Event Source:</span>
-                <span className="px-2 py-0.5 rounded bg-cyber-panel border border-cyber-border/40 text-cyber-cyan">
-                  {selectedThreat.event_source === 'simulation' ? 'DEMO SIMULATION' : 'LIVE CAPTURE'}
+                <span className="text-[#B8C5D8]">Event Source:</span>
+                <span className="px-2.5 py-0.5 rounded-md bg-[#1E2F46] border border-[#364D6E]/50 text-[#43D6C5]">
+                  {selectedThreat.event_source === 'simulation' ? 'DEMO SIMULATION' : 'LIVE WI-FI CAPTURE'}
                 </span>
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end gap-3 pt-3 border-t border-cyber-border/30">
+            <div className="mt-6 flex justify-end gap-3 pt-3 border-t border-white/[0.08]">
               <button
                 onClick={() => navigate(`/intelligence?ip=${selectedThreat.src_ip}`)}
-                className="px-3.5 py-1.5 rounded-lg bg-cyber-panel border border-cyber-border/60 hover:bg-cyber-cyan hover:text-black text-xs font-mono-code text-cyber-text font-semibold transition-all"
+                className="px-4 py-2 rounded-lg bg-[#5B8DEF] hover:bg-[#5B8DEF]/90 text-[#F3F6FC] text-xs font-mono-code font-semibold transition-all shadow-[0_0_12px_rgba(91,141,239,0.3)]"
               >
                 Investigate Source IP
               </button>
               <button
                 onClick={() => setSelectedThreat(null)}
-                className="px-4 py-1.5 rounded-lg bg-cyber-card border border-cyber-border/40 hover:bg-cyber-panel text-xs font-mono-code text-cyber-muted hover:text-cyber-text"
+                className="px-4 py-2 rounded-lg bg-[#1E2F46] border border-[#364D6E]/50 hover:bg-[#253750] text-xs font-mono-code text-[#B8C5D8] hover:text-[#F3F6FC] shadow-neumorph-sm"
               >
                 Close
               </button>

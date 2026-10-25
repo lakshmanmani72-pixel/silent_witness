@@ -14,34 +14,42 @@ const ConfirmationModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-md bg-cyber-card border border-cyber-border rounded-xl shadow-2xl p-6 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-md animate-fadeIn">
+      <div className="relative w-full max-w-md bg-[#253750] border border-[#364D6E]/80 rounded-2xl shadow-2xl p-6 overflow-hidden">
         {/* Glow accent bar */}
-        <div className={`absolute top-0 left-0 right-0 h-1 ${isDanger ? 'bg-cyber-red shadow-red-glow' : 'bg-cyber-cyan shadow-cyan-glow'}`} />
+        <div className={`absolute top-0 left-0 right-0 h-1 ${
+          isDanger
+            ? 'bg-gradient-to-r from-[#FF7185] to-[#F5BD61] shadow-[0_0_12px_rgba(255,113,133,0.4)]'
+            : 'bg-gradient-to-r from-[#5B8DEF] to-[#43D6C5] shadow-[0_0_12px_rgba(91,141,239,0.4)]'
+        }`} />
 
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className={`p-2.5 rounded-lg border ${isDanger ? 'bg-red-500/10 border-red-500/30 text-cyber-red' : 'bg-cyan-500/10 border-cyan-500/30 text-cyber-cyan'}`}>
+            <div className={`p-2.5 rounded-xl border shadow-neumorph-sm ${
+              isDanger
+                ? 'bg-[#FF7185]/15 border-[#FF7185]/35 text-[#FF7185]'
+                : 'bg-[#5B8DEF]/15 border-[#5B8DEF]/35 text-[#5B8DEF]'
+            }`}>
               <AlertTriangle className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-semibold text-cyber-text tracking-wide">{title}</h3>
+            <h3 className="text-base font-bold text-[#F3F6FC] tracking-wide">{title}</h3>
           </div>
           <button
             onClick={onClose}
-            className="text-cyber-muted hover:text-cyber-text transition-colors p-1"
+            className="text-[#B8C5D8] hover:text-[#F3F6FC] transition-colors p-1 rounded-lg hover:bg-[#1E2F46]"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <p className="text-sm text-cyber-muted leading-relaxed mb-6 font-sans">
+        <p className="text-xs sm:text-sm text-[#B8C5D8] leading-relaxed mb-6 font-sans">
           {message}
         </p>
 
-        <div className="flex items-center justify-end gap-3">
+        <div className="flex items-center justify-end gap-3 font-mono-code text-xs">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-cyber-muted hover:text-cyber-text bg-cyber-secondary border border-cyber-border/40 rounded-lg transition-all hover:bg-cyber-panel"
+            className="px-4 py-2 font-medium text-[#B8C5D8] hover:text-[#F3F6FC] bg-[#1E2F46] border border-[#364D6E]/50 rounded-lg transition-all hover:bg-[#2B3F59] shadow-neumorph-sm"
           >
             {cancelText}
           </button>
@@ -50,10 +58,10 @@ const ConfirmationModal = ({
               onConfirm();
               onClose();
             }}
-            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all shadow-md ${
+            className={`px-4 py-2 font-semibold rounded-lg transition-all shadow-md ${
               isDanger
-                ? 'bg-cyber-red hover:bg-red-600 text-white shadow-red-glow'
-                : 'bg-cyber-cyan hover:bg-cyan-400 text-black shadow-cyan-glow'
+                ? 'bg-[#FF7185] hover:bg-[#FF7185]/90 text-white shadow-[0_0_15px_rgba(255,113,133,0.3)]'
+                : 'bg-[#5B8DEF] hover:bg-[#5B8DEF]/90 text-white shadow-[0_0_15px_rgba(91,141,239,0.3)]'
             }`}
           >
             {confirmText}

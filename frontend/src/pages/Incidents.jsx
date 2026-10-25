@@ -12,6 +12,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Info,
+  Clock,
+  ExternalLink,
+  X,
 } from 'lucide-react';
 import SeverityBadge from '../components/SeverityBadge';
 import { endpoints } from '../services/api';
@@ -83,12 +86,18 @@ const Incidents = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <History className="w-5 h-5 text-cyber-cyan" />
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2 h-2 rounded-full bg-aurora-teal animate-pulse" />
+            <span className="text-[10px] uppercase font-bold text-aurora-teal tracking-widest font-sans">
+              Compliance & Forensics
+            </span>
+          </div>
+          <h1 className="text-xl font-bold tracking-tight text-aurora-text flex items-center gap-2">
+            <History className="w-5 h-5 text-aurora-teal" />
             Security Incident Audit Log
           </h1>
-          <p className="text-xs text-cyber-muted mt-1 font-sans">
-            Immutable, append-only operational audit trail for incident investigation and compliance verification.
+          <p className="text-xs text-aurora-muted mt-1 font-sans">
+            Immutable, append-only operational audit trail for incident investigation, threat forensics, and compliance.
           </p>
         </div>
 
@@ -99,7 +108,7 @@ const Incidents = () => {
             reviewed: reviewedFilter || undefined,
           })}
           download
-          className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-cyber-card border border-cyber-border/40 hover:border-cyber-cyan text-xs text-cyber-text hover:text-cyber-cyan transition-all shadow-sm"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-aurora-surface border border-aurora-border/40 hover:border-aurora-teal/50 text-xs text-aurora-text hover:text-aurora-teal transition-all shadow-aurora-card font-sans font-medium"
         >
           <Download className="w-3.5 h-3.5" />
           <span>Export Audit CSV</span>
@@ -107,15 +116,15 @@ const Incidents = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-cyber-card border border-cyber-border rounded-xl p-4 shadow-lg flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 text-xs">
+      <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl p-4 shadow-aurora-card flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 text-xs">
         <form onSubmit={handleSearchSubmit} className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-cyber-muted" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-aurora-muted" />
           <input
             type="text"
             placeholder="Search by IP or Incident ID..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-cyber-panel border border-cyber-border/40 rounded-lg pl-9 pr-4 py-2 text-cyber-text placeholder:text-cyber-muted/60 focus:outline-none focus:border-cyber-cyan"
+            className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg pl-9 pr-4 py-2 text-aurora-text placeholder:text-aurora-muted/50 focus:outline-none focus:border-aurora-blue/60 transition-colors"
           />
         </form>
 
@@ -123,7 +132,7 @@ const Incidents = () => {
           <select
             value={typeFilter}
             onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-            className="bg-cyber-panel border border-cyber-border/40 rounded-lg px-3 py-2 text-cyber-text focus:outline-none focus:border-cyber-cyan"
+            className="bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
           >
             <option value="">All Incident Types</option>
             <option value="SYN_FLOOD">SYN Flood</option>
@@ -134,7 +143,7 @@ const Incidents = () => {
           <select
             value={severityFilter}
             onChange={(e) => { setSeverityFilter(e.target.value); setPage(1); }}
-            className="bg-cyber-panel border border-cyber-border/40 rounded-lg px-3 py-2 text-cyber-text focus:outline-none focus:border-cyber-cyan"
+            className="bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
           >
             <option value="">All Severities</option>
             <option value="CRITICAL">Critical</option>
@@ -145,7 +154,7 @@ const Incidents = () => {
           <select
             value={reviewedFilter}
             onChange={(e) => { setReviewedFilter(e.target.value); setPage(1); }}
-            className="bg-cyber-panel border border-cyber-border/40 rounded-lg px-3 py-2 text-cyber-text focus:outline-none focus:border-cyber-cyan"
+            className="bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
           >
             <option value="">All Review Statuses</option>
             <option value="false">Pending Analyst Review</option>
@@ -155,79 +164,80 @@ const Incidents = () => {
       </div>
 
       {/* Main Incident Audit Table */}
-      <div className="bg-cyber-card border border-cyber-border rounded-xl shadow-lg overflow-hidden text-xs">
+      <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl shadow-aurora-card overflow-hidden text-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-cyber-border/40 text-cyber-muted uppercase text-[11px] tracking-wider bg-cyber-panel/50">
-                <th className="py-3 px-4 font-semibold">Incident ID</th>
-                <th className="py-3 px-4 font-semibold">Timestamp</th>
-                <th className="py-3 px-4 font-semibold">Incident Type</th>
-                <th className="py-3 px-4 font-semibold">Source IP</th>
-                <th className="py-3 px-4 font-semibold">Severity</th>
-                <th className="py-3 px-4 font-semibold">Action Status</th>
-                <th className="py-3 px-4 font-semibold">Source Origin</th>
-                <th className="py-3 px-4 font-semibold">Analyst Review</th>
-                <th className="py-3 px-4 font-semibold text-right">Actions</th>
+              <tr className="border-b border-aurora-border/40 text-aurora-muted uppercase text-[10px] tracking-wider bg-aurora-bg/40 font-sans">
+                <th className="py-3.5 px-4 font-semibold">Incident ID</th>
+                <th className="py-3.5 px-4 font-semibold">Timestamp</th>
+                <th className="py-3.5 px-4 font-semibold">Incident Type</th>
+                <th className="py-3.5 px-4 font-semibold">Source IP</th>
+                <th className="py-3.5 px-4 font-semibold">Severity</th>
+                <th className="py-3.5 px-4 font-semibold">Action Status</th>
+                <th className="py-3.5 px-4 font-semibold">Source Origin</th>
+                <th className="py-3.5 px-4 font-semibold">Analyst Review</th>
+                <th className="py-3.5 px-4 font-semibold text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-cyber-border/20">
+            <tbody className="divide-y divide-aurora-border/20">
               {incidents.length === 0 ? (
                 <tr>
-                  <td colSpan="9" className="py-12 text-center text-cyber-muted">
+                  <td colSpan="9" className="py-14 text-center text-aurora-muted font-sans">
+                    <FileCheck className="w-8 h-8 mx-auto mb-2 text-aurora-teal/50" />
                     No incidents recorded. Audit log is clean.
                   </td>
                 </tr>
               ) : (
                 incidents.map((inc) => (
-                  <tr key={inc.id} className="hover:bg-cyber-panel/50 transition-colors">
-                    <td className="py-3 px-4 font-bold text-cyber-cyan whitespace-nowrap">
+                  <tr key={inc.id} className="hover:bg-aurora-panel/40 transition-colors">
+                    <td className="py-3.5 px-4 font-bold text-aurora-blue whitespace-nowrap">
                       INC-{String(inc.id).padStart(4, '0')}
                     </td>
-                    <td className="py-3 px-4 text-cyber-muted whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-aurora-muted whitespace-nowrap">
                       {new Date(inc.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                     </td>
-                    <td className="py-3 px-4 text-white font-semibold whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-aurora-text font-medium whitespace-nowrap">
                       {inc.incident_type}
                     </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
                       <button
                         onClick={() => navigate(`/intelligence?ip=${inc.src_ip}`)}
-                        className="text-cyber-cyan hover:underline font-bold"
+                        className="text-aurora-teal hover:underline font-bold"
                       >
                         {inc.src_ip}
                       </button>
                     </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
                       <SeverityBadge severity={inc.severity} />
                     </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded bg-cyber-panel border border-cyber-border/40 text-cyber-text text-[10px] uppercase font-semibold">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      <span className="px-2 py-0.5 rounded bg-aurora-bg/60 border border-aurora-border/40 text-aurora-text text-[10px] uppercase font-semibold">
                         {inc.action_status || 'completed'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded bg-cyber-panel border border-cyber-border/40 text-cyber-cyan text-[10px] uppercase font-bold">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      <span className="px-2 py-0.5 rounded bg-aurora-bg/60 border border-aurora-border/40 text-aurora-teal text-[10px] uppercase font-bold">
                         {inc.event_source === 'simulation' ? 'DEMO' : 'LIVE'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
                       <button
                         onClick={() => handleToggleReviewed(inc)}
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-semibold border transition-all ${
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold border transition-all ${
                           inc.reviewed
-                            ? 'bg-cyber-green/10 text-cyber-green border-cyber-green/40 hover:bg-cyber-green/20'
-                            : 'bg-cyber-amber/10 text-cyber-amber border-cyber-amber/40 hover:bg-cyber-amber/20'
+                            ? 'bg-aurora-success/15 text-aurora-success border-aurora-success/40 hover:bg-aurora-success/25'
+                            : 'bg-aurora-warning/15 text-aurora-warning border-aurora-warning/40 hover:bg-aurora-warning/25'
                         }`}
                       >
                         <CheckCircle className="w-3 h-3" />
                         <span>{inc.reviewed ? 'Reviewed' : 'Pending'}</span>
                       </button>
                     </td>
-                    <td className="py-3 px-4 text-right whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <button
                         onClick={() => setSelectedIncident(inc)}
-                        className="px-2.5 py-1 rounded bg-cyber-panel hover:bg-cyber-cyan hover:text-black border border-cyber-border/40 text-cyber-text transition-all"
+                        className="px-2.5 py-1 rounded-lg bg-aurora-bg/80 hover:bg-aurora-blue hover:text-white border border-aurora-border/40 text-aurora-text transition-all font-sans font-medium"
                       >
                         Inspect
                       </button>
@@ -240,25 +250,25 @@ const Incidents = () => {
         </div>
 
         {/* Pagination */}
-        <div className="p-4 border-t border-cyber-border/30 flex items-center justify-between text-xs text-cyber-muted">
+        <div className="p-4 border-t border-aurora-border/30 flex items-center justify-between text-xs text-aurora-muted font-sans">
           <div>
-            Showing {incidents.length} of {total} incidents (Page {page} of {pages})
+            Showing <span className="font-bold text-aurora-text">{incidents.length}</span> of <span className="font-bold text-aurora-text">{total}</span> incidents (Page {page} of {pages})
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="p-1.5 rounded bg-cyber-panel border border-cyber-border/40 disabled:opacity-30 hover:border-cyber-cyan transition-colors"
+              className="p-1.5 rounded-lg bg-aurora-bg/70 border border-aurora-border/40 disabled:opacity-30 hover:border-aurora-teal transition-colors"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4 text-aurora-text" />
             </button>
-            <span className="px-2 font-bold text-cyber-cyan">{page}</span>
+            <span className="px-2 font-bold text-aurora-teal font-mono-code">{page}</span>
             <button
               onClick={() => setPage((p) => Math.min(pages, p + 1))}
               disabled={page >= pages}
-              className="p-1.5 rounded bg-cyber-panel border border-cyber-border/40 disabled:opacity-30 hover:border-cyber-cyan transition-colors"
+              className="p-1.5 rounded-lg bg-aurora-bg/70 border border-aurora-border/40 disabled:opacity-30 hover:border-aurora-teal transition-colors"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4 text-aurora-text" />
             </button>
           </div>
         </div>
@@ -266,58 +276,60 @@ const Incidents = () => {
 
       {/* Incident Inspection Modal */}
       {selectedIncident && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="relative w-full max-w-lg bg-cyber-card border border-cyber-border rounded-xl shadow-2xl p-6">
-            <div className="flex items-center justify-between pb-3 border-b border-cyber-border/40 mb-4">
-              <h3 className="text-base font-bold text-cyber-text flex items-center gap-2">
-                <FileCheck className="w-4 h-4 text-cyber-cyan" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-lg bg-aurora-surface border border-aurora-border/60 rounded-2xl shadow-2xl p-6 overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-aurora-blue via-aurora-teal to-aurora-violet" />
+
+            <div className="flex items-center justify-between pb-3 border-b border-aurora-border/40 mb-4">
+              <h3 className="text-base font-bold text-aurora-text flex items-center gap-2">
+                <FileCheck className="w-4 h-4 text-aurora-teal" />
                 Audit Record INC-{String(selectedIncident.id).padStart(4, '0')}
               </h3>
               <button
                 onClick={() => setSelectedIncident(null)}
-                className="text-cyber-muted hover:text-white"
+                className="w-7 h-7 rounded-lg bg-aurora-bg/60 border border-aurora-border/40 text-aurora-muted hover:text-white flex items-center justify-center transition-colors"
               >
-                &times;
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-3 bg-cyber-panel/60 p-3 rounded-lg border border-cyber-border/30">
+            <div className="space-y-3.5 text-xs">
+              <div className="grid grid-cols-2 gap-3 bg-aurora-bg/60 p-3.5 rounded-xl border border-aurora-border/30">
                 <div>
-                  <span className="text-cyber-muted">Timestamp:</span>
-                  <p className="text-white mt-0.5">{new Date(selectedIncident.timestamp).toUTCString()}</p>
+                  <span className="text-aurora-muted font-sans text-[11px]">Timestamp:</span>
+                  <p className="text-aurora-text mt-0.5">{new Date(selectedIncident.timestamp).toUTCString()}</p>
                 </div>
                 <div>
-                  <span className="text-cyber-muted">Severity:</span>
+                  <span className="text-aurora-muted font-sans text-[11px]">Severity:</span>
                   <div className="mt-0.5">
                     <SeverityBadge severity={selectedIncident.severity} />
                   </div>
                 </div>
                 <div>
-                  <span className="text-cyber-muted">Source IP:</span>
-                  <p className="text-cyber-cyan font-bold mt-0.5">{selectedIncident.src_ip}</p>
+                  <span className="text-aurora-muted font-sans text-[11px]">Source IP:</span>
+                  <p className="text-aurora-teal font-bold mt-0.5">{selectedIncident.src_ip}</p>
                 </div>
                 <div>
-                  <span className="text-cyber-muted">Threat ID:</span>
-                  <p className="text-white mt-0.5">#{selectedIncident.threat_id || 'N/A'}</p>
+                  <span className="text-aurora-muted font-sans text-[11px]">Threat ID:</span>
+                  <p className="text-aurora-text mt-0.5">#{selectedIncident.threat_id || 'N/A'}</p>
                 </div>
               </div>
 
               <div>
-                <span className="text-cyber-muted block mb-1">Details & Technical Parameters:</span>
-                <pre className="p-3 bg-cyber-bg border border-cyber-border/30 rounded-lg text-cyber-text text-[11px] overflow-x-auto whitespace-pre-wrap font-mono-code">
+                <span className="text-aurora-muted block mb-1 font-sans text-[11px]">Details & Technical Parameters:</span>
+                <pre className="p-3.5 bg-aurora-bg border border-aurora-border/30 rounded-xl text-aurora-text text-[11px] overflow-x-auto whitespace-pre-wrap font-mono-code">
                   {selectedIncident.details || 'No extended payload metadata logged.'}
                 </pre>
               </div>
 
-              <div className="p-3 bg-cyber-panel/40 border border-cyber-border/20 rounded-lg flex items-center justify-between">
-                <span className="text-cyber-muted">Compliance Review Status:</span>
+              <div className="p-3.5 bg-aurora-panel/50 border border-aurora-border/30 rounded-xl flex items-center justify-between font-sans">
+                <span className="text-aurora-muted text-xs">Compliance Review Status:</span>
                 <button
                   onClick={() => handleToggleReviewed(selectedIncident)}
-                  className={`px-3 py-1 rounded text-xs font-semibold border ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
                     selectedIncident.reviewed
-                      ? 'bg-cyber-green/10 text-cyber-green border-cyber-green/40'
-                      : 'bg-cyber-amber/10 text-cyber-amber border-cyber-amber/40'
+                      ? 'bg-aurora-success/15 text-aurora-success border-aurora-success/40 hover:bg-aurora-success/25'
+                      : 'bg-aurora-warning/15 text-aurora-warning border-aurora-warning/40 hover:bg-aurora-warning/25'
                   }`}
                 >
                   {selectedIncident.reviewed ? 'Marked Reviewed' : 'Mark as Reviewed'}
@@ -325,10 +337,10 @@ const Incidents = () => {
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end gap-3 pt-3 border-t border-cyber-border/30">
+            <div className="mt-6 flex justify-end gap-3 pt-3 border-t border-aurora-border/40 font-sans">
               <button
                 onClick={() => setSelectedIncident(null)}
-                className="px-4 py-2 rounded-lg bg-cyber-panel border border-cyber-border/40 text-cyber-muted hover:text-white"
+                className="px-4 py-2 rounded-lg bg-aurora-bg/80 border border-aurora-border/40 text-aurora-muted hover:text-white transition-colors text-xs"
               >
                 Close Audit Entry
               </button>
