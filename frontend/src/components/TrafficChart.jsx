@@ -14,8 +14,8 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     const formattedTime = label ? new Date(label).toLocaleTimeString() : '';
     return (
-      <div className="bg-[#1E2F46]/95 border border-[#5B8DEF]/30 p-3 rounded-xl shadow-2xl backdrop-blur-md text-xs font-mono-code space-y-1.5">
-        <p className="text-[#B8C5D8] font-semibold pb-1.5 border-b border-white/[0.08]">
+      <div className="bg-sage/95 border border-bluegrey/30 p-3 rounded-xl shadow-soft text-xs font-mono-code space-y-1.5">
+        <p className="text-muted font-semibold pb-1.5 border-b border-bluegrey/25">
           Telemetry Timestamp: {formattedTime || label}
         </p>
         {payload.map((item, index) => (
@@ -24,7 +24,7 @@ const CustomTooltip = ({ active, payload, label }) => {
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
               {item.name}:
             </span>
-            <span className="font-bold text-[#F3F6FC]">
+            <span className="font-bold text-ink">
               {item.value.toLocaleString()}
             </span>
           </div>
@@ -54,35 +54,35 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
   };
 
   return (
-    <div className="bg-[#2B3F59]/80 backdrop-blur-md border border-[#364D6E]/70 rounded-xl p-5 shadow-aurora-card relative overflow-hidden">
+    <div className="bg-surface border border-bluegrey/40 rounded-xl p-5 shadow-soft relative overflow-hidden">
       {/* Top subtle aurora gradient line */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#5B8DEF] via-[#43D6C5] to-[#B3A0FF] opacity-60" />
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-bluegrey via-forest to-bluegrey opacity-60" />
 
       {/* Blueprint technical corner markers */}
-      <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-white/20 pointer-events-none" />
-      <div className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 border-b border-r border-white/20 pointer-events-none" />
+      <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-bluegrey/25 pointer-events-none" />
+      <div className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 border-b border-r border-bluegrey/25 pointer-events-none" />
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
         <div>
-          <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#F3F6FC] font-mono-code flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#43D6C5] shadow-[0_0_8px_#43D6C5]" />
+          <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-ink font-mono-code flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-forest shadow-soft" />
             Network Traffic Volume & Threat Rate
           </h3>
-          <p className="text-xs text-[#B8C5D8] mt-0.5">
+          <p className="text-xs text-muted mt-0.5">
             Real-time packet inspection & telemetry throughput
           </p>
         </div>
 
         {/* Time-range pills with soft neumorphism */}
-        <div className="flex items-center gap-1 bg-[#1E2F46] p-1 rounded-lg border border-[#364D6E]/50 font-mono-code text-xs shadow-neumorph-inset">
+        <div className="flex items-center gap-1 bg-sage p-1 rounded-lg border border-bluegrey/50 font-mono-code text-xs shadow-neumorph-inset">
           {ranges.map((r) => (
             <button
               key={r.value}
               onClick={() => onTimeRangeChange && onTimeRangeChange(r.value)}
               className={`px-3 py-1 rounded transition-all text-xs font-semibold ${
                 timeRange === r.value
-                  ? 'bg-[#5B8DEF] text-[#F3F6FC] shadow-[0_0_12px_rgba(91,141,239,0.35)]'
-                  : 'text-[#B8C5D8] hover:text-[#F3F6FC] hover:bg-[#253750]'
+                  ? 'bg-forest text-white shadow-soft'
+                  : 'text-muted hover:text-ink hover:bg-sage'
               }`}
             >
               {r.label}
@@ -93,8 +93,8 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
 
       <div className="h-64 sm:h-72 w-full">
         {data.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-[#B8C5D8] text-xs font-mono-code space-y-2">
-            <span className="w-8 h-8 rounded-full border border-dashed border-[#43D6C5]/50 animate-spin" />
+          <div className="h-full flex flex-col items-center justify-center text-muted text-xs font-mono-code space-y-2">
+            <span className="w-8 h-8 rounded-full border border-dashed border-forest/50 animate-spin" />
             <p>Awaiting network telemetry packets...</p>
           </div>
         ) : (
@@ -102,30 +102,30 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
             <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorPackets" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#5B8DEF" stopOpacity={0.35} />
-                  <stop offset="95%" stopColor="#5B8DEF" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#8296A5" stopOpacity={0.35} />
+                  <stop offset="95%" stopColor="#8296A5" stopOpacity={0.0} />
                 </linearGradient>
                 <linearGradient id="colorSuspicious" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#F5BD61" stopOpacity={0.35} />
-                  <stop offset="95%" stopColor="#F5BD61" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#C5A66D" stopOpacity={0.35} />
+                  <stop offset="95%" stopColor="#C5A66D" stopOpacity={0.0} />
                 </linearGradient>
                 <linearGradient id="colorThreats" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#FF7185" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#FF7185" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#C87878" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#C87878" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
 
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(91, 141, 239, 0.10)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(130,150,165, 0.10)" vertical={false} />
               <XAxis
                 dataKey="timestamp"
                 tickFormatter={formatXAxis}
-                stroke="#364D6E"
-                tick={{ fill: '#B8C5D8', fontSize: 10, fontFamily: 'monospace' }}
+                stroke="#B4C0C8"
+                tick={{ fill: '#64748B', fontSize: 10, fontFamily: 'monospace' }}
                 tickLine={false}
               />
               <YAxis
-                stroke="#364D6E"
-                tick={{ fill: '#B8C5D8', fontSize: 10, fontFamily: 'monospace' }}
+                stroke="#B4C0C8"
+                tick={{ fill: '#64748B', fontSize: 10, fontFamily: 'monospace' }}
                 tickLine={false}
               />
               <Tooltip content={<CustomTooltip />} />
@@ -140,7 +140,7 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
                 type="monotone"
                 dataKey="packets_observed"
                 name="Total Packets"
-                stroke="#5B8DEF"
+                stroke="#8296A5"
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorPackets)"
@@ -149,7 +149,7 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
                 type="monotone"
                 dataKey="suspicious_packets"
                 name="Suspicious"
-                stroke="#F5BD61"
+                stroke="#C5A66D"
                 strokeWidth={1.5}
                 fillOpacity={1}
                 fill="url(#colorSuspicious)"
@@ -158,7 +158,7 @@ const TrafficChart = ({ data = [], timeRange = '5m', onTimeRangeChange }) => {
                 type="monotone"
                 dataKey="threats_detected"
                 name="Threats Detected"
-                stroke="#FF7185"
+                stroke="#C87878"
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorThreats)"

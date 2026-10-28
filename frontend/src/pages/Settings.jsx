@@ -112,23 +112,23 @@ const Settings = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-aurora-blue animate-pulse" />
-            <span className="text-[10px] uppercase font-bold text-aurora-teal tracking-widest font-sans">
+            <span className="w-2 h-2 rounded-full bg-bluegrey animate-pulse" />
+            <span className="text-[10px] uppercase font-bold text-forest tracking-widest font-sans">
               System Control & Policies
             </span>
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-aurora-text flex items-center gap-2">
-            <SettingsIcon className="w-5 h-5 text-aurora-blue" />
+          <h1 className="text-xl font-bold tracking-tight text-ink flex items-center gap-2">
+            <SettingsIcon className="w-5 h-5 text-bluegrey-ink" />
             System Configuration & Detection Policies
           </h1>
-          <p className="text-xs text-aurora-muted mt-1 font-sans">
+          <p className="text-xs text-muted mt-1 font-sans">
             Adjust real-time rolling window detection thresholds, automated response policies, and containment safeguards.
           </p>
         </div>
 
         <button
           onClick={() => setIsConfirmSaveOpen(true)}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-aurora-blue to-aurora-teal hover:from-blue-500 hover:to-teal-400 text-white font-bold text-xs shadow-aurora-btn transition-all font-sans"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-forest hover:bg-forest/90 text-white font-bold text-xs shadow-aurora-btn transition-all font-sans"
         >
           <Save className="w-4 h-4" />
           <span>Save Changes</span>
@@ -137,32 +137,32 @@ const Settings = () => {
 
       {/* Status alerts */}
       {successMsg && (
-        <div className="p-4 bg-aurora-success/10 border border-aurora-success/40 rounded-xl text-aurora-success text-xs flex items-center gap-2.5 animate-fadeIn font-sans">
-          <CheckCircle className="w-4 h-4 shrink-0 text-aurora-success" />
+        <div className="p-4 bg-good/10 border border-good/40 rounded-xl text-good-ink text-xs flex items-center gap-2.5 animate-fadeIn font-sans">
+          <CheckCircle className="w-4 h-4 shrink-0 text-good-ink" />
           <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div className="p-4 bg-aurora-error/10 border border-aurora-error/40 rounded-xl text-aurora-error text-xs flex items-center gap-2.5 animate-fadeIn font-sans">
-          <AlertTriangle className="w-4 h-4 shrink-0 text-aurora-error" />
+        <div className="p-4 bg-bad/10 border border-bad/40 rounded-xl text-bad-ink text-xs flex items-center gap-2.5 animate-fadeIn font-sans">
+          <AlertTriangle className="w-4 h-4 shrink-0 text-bad-ink" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs">
         {/* ── 1. Detection Settings ────────────────────────────────────────── */}
-        <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl p-5 shadow-aurora-card space-y-4 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-aurora-blue to-transparent" />
+        <div className="bg-surface border border-bluegrey/40 rounded-xl p-5 shadow-soft space-y-4 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-bluegrey to-transparent" />
           
-          <h2 className="text-xs uppercase font-bold text-aurora-blue tracking-wider flex items-center gap-2 font-sans">
+          <h2 className="text-xs uppercase font-bold text-bluegrey-ink tracking-wider flex items-center gap-2 font-sans">
             <ShieldAlert className="w-4 h-4" />
             Detection Engine Thresholds
           </h2>
 
           <div className="space-y-3.5">
             <div>
-              <label className="text-aurora-muted block mb-1 font-sans text-[11px]">
+              <label className="text-muted block mb-1 font-sans text-[11px]">
                 SYN Flood Critical Threshold (Packets in Window):
               </label>
               <input
@@ -170,13 +170,13 @@ const Settings = () => {
                 min="1"
                 value={settings.syn_flood_critical_threshold}
                 onChange={(e) => handleInputChange('syn_flood_critical_threshold', parseInt(e.target.value) || 100)}
-                className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
               />
-              <span className="text-[10px] text-aurora-muted/70 font-sans">Default: &gt;100 packets in rolling window</span>
+              <span className="text-[10px] text-muted/70 font-sans">Default: &gt;100 packets in rolling window</span>
             </div>
 
             <div>
-              <label className="text-aurora-muted block mb-1 font-sans text-[11px]">
+              <label className="text-muted block mb-1 font-sans text-[11px]">
                 SYN Flood High Threshold (Packets in Window):
               </label>
               <input
@@ -184,14 +184,14 @@ const Settings = () => {
                 min="1"
                 value={settings.syn_flood_high_threshold}
                 onChange={(e) => handleInputChange('syn_flood_high_threshold', parseInt(e.target.value) || 50)}
-                className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
               />
-              <span className="text-[10px] text-aurora-muted/70 font-sans">Default: 50-100 packets triggers High severity</span>
+              <span className="text-[10px] text-muted/70 font-sans">Default: 50-100 packets triggers High severity</span>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-aurora-muted block mb-1 font-sans text-[11px]">
+                <label className="text-muted block mb-1 font-sans text-[11px]">
                   SYN Flood Window (Sec):
                 </label>
                 <input
@@ -199,12 +199,12 @@ const Settings = () => {
                   min="1"
                   value={settings.syn_flood_window_seconds}
                   onChange={(e) => handleInputChange('syn_flood_window_seconds', parseInt(e.target.value) || 10)}
-                  className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                  className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-aurora-muted block mb-1 font-sans text-[11px]">
+                <label className="text-muted block mb-1 font-sans text-[11px]">
                   Port Scan Window (Sec):
                 </label>
                 <input
@@ -212,13 +212,13 @@ const Settings = () => {
                   min="1"
                   value={settings.port_scan_window_seconds}
                   onChange={(e) => handleInputChange('port_scan_window_seconds', parseInt(e.target.value) || 60)}
-                  className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                  className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-aurora-muted block mb-1 font-sans text-[11px]">
+              <label className="text-muted block mb-1 font-sans text-[11px]">
                 Port Scan High Threshold (Distinct Destination Ports):
               </label>
               <input
@@ -226,13 +226,13 @@ const Settings = () => {
                 min="1"
                 value={settings.port_scan_high_threshold}
                 onChange={(e) => handleInputChange('port_scan_high_threshold', parseInt(e.target.value) || 100)}
-                className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
               />
-              <span className="text-[10px] text-aurora-muted/70 font-sans">Default: &gt;100 distinct ports contacted in window</span>
+              <span className="text-[10px] text-muted/70 font-sans">Default: &gt;100 distinct ports contacted in window</span>
             </div>
 
             <div>
-              <label className="text-aurora-muted block mb-1 font-sans text-[11px]">
+              <label className="text-muted block mb-1 font-sans text-[11px]">
                 Alert Cooldown Period (Seconds between repeated alerts per IP):
               </label>
               <input
@@ -240,27 +240,27 @@ const Settings = () => {
                 min="1"
                 value={settings.alert_cooldown_seconds}
                 onChange={(e) => handleInputChange('alert_cooldown_seconds', parseInt(e.target.value) || 30)}
-                className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
               />
             </div>
           </div>
         </div>
 
         {/* ── 2. Response & Firewall Settings ──────────────────────────────── */}
-        <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl p-5 shadow-aurora-card space-y-4 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-aurora-error to-transparent" />
+        <div className="bg-surface border border-bluegrey/40 rounded-xl p-5 shadow-soft space-y-4 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-bad to-transparent" />
           
-          <h2 className="text-xs uppercase font-bold text-aurora-error tracking-wider flex items-center gap-2 font-sans">
+          <h2 className="text-xs uppercase font-bold text-bad-ink tracking-wider flex items-center gap-2 font-sans">
             <Lock className="w-4 h-4" />
             Automated Response & Safety Controls
           </h2>
 
           <div className="space-y-3.5">
             {/* Dry run switch */}
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-aurora-bg/60 border border-aurora-border/30">
+            <div className="flex items-center justify-between p-3.5 rounded-xl bg-mist/60 border border-bluegrey/30">
               <div className="pr-3">
-                <span className="font-bold text-aurora-text block">Dry-Run Mode (Simulation Guard)</span>
-                <span className="text-[11px] text-aurora-muted font-sans leading-relaxed">
+                <span className="font-bold text-ink block">Dry-Run Mode (Simulation Guard)</span>
+                <span className="text-[11px] text-muted font-sans leading-relaxed">
                   When enabled, all blocking actions are logged safely without modifying host firewall rules.
                 </span>
               </div>
@@ -268,15 +268,15 @@ const Settings = () => {
                 type="checkbox"
                 checked={settings.dry_run_mode}
                 onChange={(e) => handleInputChange('dry_run_mode', e.target.checked)}
-                className="w-4 h-4 accent-aurora-teal cursor-pointer shrink-0"
+                className="w-4 h-4 accent-forest cursor-pointer shrink-0"
               />
             </div>
 
             {/* Auto response toggle */}
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-aurora-bg/60 border border-aurora-border/30">
+            <div className="flex items-center justify-between p-3.5 rounded-xl bg-mist/60 border border-bluegrey/30">
               <div className="pr-3">
-                <span className="font-bold text-aurora-text block">Enable Automated Response</span>
-                <span className="text-[11px] text-aurora-muted font-sans leading-relaxed">
+                <span className="font-bold text-ink block">Enable Automated Response</span>
+                <span className="text-[11px] text-muted font-sans leading-relaxed">
                   Automatically register containment blocks for Critical / High threat detections.
                 </span>
               </div>
@@ -284,13 +284,13 @@ const Settings = () => {
                 type="checkbox"
                 checked={settings.auto_response_enabled}
                 onChange={(e) => handleInputChange('auto_response_enabled', e.target.checked)}
-                className="w-4 h-4 accent-aurora-teal cursor-pointer shrink-0"
+                className="w-4 h-4 accent-forest cursor-pointer shrink-0"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-aurora-muted block mb-1 font-sans text-[11px]">
+                <label className="text-muted block mb-1 font-sans text-[11px]">
                   Default Block (Minutes):
                 </label>
                 <input
@@ -298,12 +298,12 @@ const Settings = () => {
                   min="1"
                   value={settings.default_block_duration_min}
                   onChange={(e) => handleInputChange('default_block_duration_min', parseInt(e.target.value) || 60)}
-                  className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                  className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-aurora-muted block mb-1 font-sans text-[11px]">
+                <label className="text-muted block mb-1 font-sans text-[11px]">
                   Max Blocks / Hour:
                 </label>
                 <input
@@ -311,24 +311,24 @@ const Settings = () => {
                   min="1"
                   value={settings.max_blocks_per_hour}
                   onChange={(e) => handleInputChange('max_blocks_per_hour', parseInt(e.target.value) || 20)}
-                  className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                  className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
                 />
               </div>
             </div>
 
             {/* Allowlist IPs */}
             <div>
-              <label className="text-aurora-muted block mb-1 font-sans text-[11px]">
+              <label className="text-muted block mb-1 font-sans text-[11px]">
                 Protected Allow-List (Comma-separated IPs):
               </label>
               <textarea
                 rows="2"
                 value={allowlistText}
                 onChange={(e) => setAllowlistText(e.target.value)}
-                className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 font-mono-code text-xs transition-colors"
+                className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 font-mono-code text-xs transition-colors"
                 placeholder="127.0.0.1, ::1, 192.168.1.1"
               />
-              <span className="text-[10px] text-aurora-muted/70 font-sans">
+              <span className="text-[10px] text-muted/70 font-sans">
                 These IP addresses will never be contained by the automated response engine.
               </span>
             </div>
@@ -336,21 +336,21 @@ const Settings = () => {
         </div>
 
         {/* ── 3. Monitoring & Packet Capture Settings ──────────────────────── */}
-        <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl p-5 shadow-aurora-card space-y-4 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-aurora-teal to-transparent" />
+        <div className="bg-surface border border-bluegrey/40 rounded-xl p-5 shadow-soft space-y-4 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-forest to-transparent" />
           
-          <h2 className="text-xs uppercase font-bold text-aurora-teal tracking-wider flex items-center gap-2 font-sans">
+          <h2 className="text-xs uppercase font-bold text-forest tracking-wider flex items-center gap-2 font-sans">
             <Radio className="w-4 h-4" />
             Sensor & Interface Configuration
           </h2>
 
           <div className="space-y-3.5">
             <div>
-              <label className="text-aurora-muted block mb-1 font-sans text-[11px]">Operating Mode:</label>
+              <label className="text-muted block mb-1 font-sans text-[11px]">Operating Mode:</label>
               <select
                 value={settings.monitoring_mode}
                 onChange={(e) => handleInputChange('monitoring_mode', e.target.value)}
-                className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
               >
                 <option value="simulation">Simulation Mode (Synthetic Demonstration)</option>
                 <option value="live">Live Monitoring (Scapy Local Passive Capture)</option>
@@ -358,12 +358,12 @@ const Settings = () => {
             </div>
 
             <div>
-              <label className="text-aurora-muted block mb-1 font-sans text-[11px]">Available Network Interfaces:</label>
+              <label className="text-muted block mb-1 font-sans text-[11px]">Available Network Interfaces:</label>
               <select
                 value={selectedInterface}
                 onChange={(e) => setSelectedInterface(e.target.value)}
                 disabled={!scapyAvailable || interfaces.length === 0}
-                className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 disabled:opacity-40 transition-colors"
+                className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 disabled:opacity-40 transition-colors"
               >
                 {interfaces.map((iface, idx) => (
                   <option key={idx} value={iface}>{iface}</option>
@@ -374,11 +374,11 @@ const Settings = () => {
               </select>
             </div>
 
-            <div className="p-3.5 bg-aurora-bg/60 rounded-xl border border-aurora-border/30 text-aurora-muted text-[11px] font-sans space-y-1.5 leading-relaxed">
+            <div className="p-3.5 bg-mist/60 rounded-xl border border-bluegrey/30 text-muted text-[11px] font-sans space-y-1.5 leading-relaxed">
               <p>
-                <strong className="text-aurora-text">Windows Note:</strong> Scapy live capture on Windows requires the Npcap packet capture driver. In college viva and classroom environments, Simulation Mode runs immediately without driver prerequisites.
+                <strong className="text-ink">Windows Note:</strong> Scapy live capture on Windows requires the Npcap packet capture driver. In college viva and classroom environments, Simulation Mode runs immediately without driver prerequisites.
               </p>
-              <p className="text-aurora-teal font-mono-code text-[10px]">
+              <p className="text-forest font-mono-code text-[10px]">
                 Driver Status: {scapyAvailable ? 'Scapy module active' : 'Driver not installed / Simulation default'}
               </p>
             </div>
@@ -386,36 +386,36 @@ const Settings = () => {
         </div>
 
         {/* ── 4. Data & Persistence Settings ───────────────────────────────── */}
-        <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl p-5 shadow-aurora-card space-y-4 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-aurora-violet to-transparent" />
+        <div className="bg-surface border border-bluegrey/40 rounded-xl p-5 shadow-soft space-y-4 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-bluegrey to-transparent" />
           
-          <h2 className="text-xs uppercase font-bold text-aurora-violet tracking-wider flex items-center gap-2 font-sans">
+          <h2 className="text-xs uppercase font-bold text-bluegrey-ink tracking-wider flex items-center gap-2 font-sans">
             <Database className="w-4 h-4" />
             Database Health & Maintenance
           </h2>
 
           <div className="space-y-3.5">
-            <div className="grid grid-cols-2 gap-3 bg-aurora-bg/60 p-3.5 rounded-xl border border-aurora-border/30 font-sans">
+            <div className="grid grid-cols-2 gap-3 bg-mist/60 p-3.5 rounded-xl border border-bluegrey/30 font-sans">
               <div>
-                <span className="text-aurora-muted text-[10px]">Database Status:</span>
-                <p className="font-bold text-aurora-success font-mono-code mt-0.5">{dbHealth?.status?.toUpperCase() || 'HEALTHY'}</p>
+                <span className="text-muted text-[10px]">Database Status:</span>
+                <p className="font-bold text-good-ink font-mono-code mt-0.5">{dbHealth?.status?.toUpperCase() || 'HEALTHY'}</p>
               </div>
               <div>
-                <span className="text-aurora-muted text-[10px]">Engine:</span>
-                <p className="font-bold text-aurora-text font-mono-code mt-0.5">SQLite WAL Mode</p>
+                <span className="text-muted text-[10px]">Engine:</span>
+                <p className="font-bold text-ink font-mono-code mt-0.5">SQLite WAL Mode</p>
               </div>
               <div>
-                <span className="text-aurora-muted text-[10px]">Threat Audit Rows:</span>
-                <p className="font-bold text-aurora-teal font-mono-code mt-0.5">{dbHealth?.threat_count || 0}</p>
+                <span className="text-muted text-[10px]">Threat Audit Rows:</span>
+                <p className="font-bold text-forest font-mono-code mt-0.5">{dbHealth?.threat_count || 0}</p>
               </div>
               <div>
-                <span className="text-aurora-muted text-[10px]">Incident Records:</span>
-                <p className="font-bold text-aurora-warning font-mono-code mt-0.5">{dbHealth?.incident_count || 0}</p>
+                <span className="text-muted text-[10px]">Incident Records:</span>
+                <p className="font-bold text-amber-ink font-mono-code mt-0.5">{dbHealth?.incident_count || 0}</p>
               </div>
             </div>
 
             <div>
-              <label className="text-aurora-muted block mb-1 font-sans text-[11px]">
+              <label className="text-muted block mb-1 font-sans text-[11px]">
                 Data Retention Horizon (Days):
               </label>
               <input
@@ -423,16 +423,16 @@ const Settings = () => {
                 min="1"
                 value={settings.data_retention_days}
                 onChange={(e) => handleInputChange('data_retention_days', parseInt(e.target.value) || 90)}
-                className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
               />
             </div>
 
             <div>
-              <label className="text-aurora-muted block mb-1 font-sans text-[11px]">Table Display Density:</label>
+              <label className="text-muted block mb-1 font-sans text-[11px]">Table Display Density:</label>
               <select
                 value={settings.table_density}
                 onChange={(e) => handleInputChange('table_density', e.target.value)}
-                className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+                className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
               >
                 <option value="comfortable">Comfortable (Standard)</option>
                 <option value="compact">Compact (High Information Density)</option>

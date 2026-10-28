@@ -183,29 +183,28 @@ const Dashboard = () => {
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto font-sans">
       {/* ── BENTO 1: Executive Master Control Bar ─────────────────────────────── */}
-      <div className="relative bg-[#2B3F59]/80 backdrop-blur-md border border-[#364D6E]/70 rounded-2xl p-6 shadow-aurora-card overflow-hidden">
+      <div className="relative bg-surface border border-bluegrey/40 rounded-2xl p-6 shadow-soft overflow-hidden">
         {/* Subtle Aurora Ambient Radial Glow */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#5B8DEF]/10 via-[#43D6C5]/5 to-transparent rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-[#B3A0FF]/5 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-bluegrey/5 rounded-full blur-2xl pointer-events-none" />
 
         {/* Blueprint corner crosshairs */}
-        <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-[#43D6C5]/40" />
-        <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-[#43D6C5]/40" />
-        <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-[#43D6C5]/40" />
-        <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-[#43D6C5]/40" />
+        <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-forest/40" />
+        <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-forest/40" />
+        <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-forest/40" />
+        <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-forest/40" />
 
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 z-10 relative">
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2.5">
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#F3F6FC] font-mono-code">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink font-mono-code">
                 Security Operations Center
               </h1>
-              <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono-code font-bold bg-[#1E2F46] border border-[#5B8DEF]/35 text-[#43D6C5] shadow-neumorph-sm">
+              <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono-code font-bold bg-sage border border-bluegrey/35 text-forest shadow-neumorph-sm">
                 SOC TIER-1 WORKBENCH
               </span>
             </div>
-            <p className="text-xs sm:text-sm text-[#B8C5D8] flex items-center gap-2">
-              <span className="text-[#43D6C5]">&bull;</span>
+            <p className="text-xs sm:text-sm text-muted flex items-center gap-2">
+              <span className="text-forest">&bull;</span>
               <span>Autonomous Network Intrusion Detection, Telemetry & Mitigation Matrix</span>
             </p>
           </div>
@@ -213,13 +212,13 @@ const Dashboard = () => {
           {/* Master Control Suite with Soft Neumorphism */}
           <div className="flex flex-wrap items-center gap-3">
             {/* Real-Time Live Wi-Fi vs. Demo Simulation Switcher */}
-            <div className="flex items-center gap-1 bg-[#1E2F46] border border-[#364D6E]/60 p-1 rounded-xl text-xs font-mono-code shadow-neumorph-inset">
+            <div className="flex items-center gap-1 bg-sage border border-bluegrey/40 p-1 rounded-xl text-xs font-mono-code shadow-neumorph-inset">
               <button
                 onClick={handleSwitchToLive}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-xs font-semibold ${
                   summary.monitoring_mode === 'live'
-                    ? 'bg-[#43D6A5] text-[#18263B] shadow-[0_0_15px_rgba(67,214,165,0.35)] font-bold'
-                    : 'text-[#B8C5D8] hover:text-[#F3F6FC] hover:bg-[#253750]'
+                    ? 'bg-good text-ink shadow-soft font-bold'
+                    : 'text-muted hover:text-ink hover:bg-sage'
                 }`}
                 title="Capture and analyze real network packets from active network adapter"
               >
@@ -231,8 +230,8 @@ const Dashboard = () => {
                 onClick={handleSwitchToSimulation}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-xs font-semibold ${
                   summary.monitoring_mode === 'simulation'
-                    ? 'bg-[#5B8DEF] text-[#F3F6FC] shadow-[0_0_15px_rgba(91,141,239,0.35)] font-bold'
-                    : 'text-[#B8C5D8] hover:text-[#F3F6FC] hover:bg-[#253750]'
+                    ? 'bg-forest text-white shadow-soft font-bold'
+                    : 'text-muted hover:text-ink hover:bg-sage'
                 }`}
                 title="Run synthetic attack demonstration scenarios"
               >
@@ -246,8 +245,8 @@ const Dashboard = () => {
               onClick={handleToggleMonitoring}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono-code font-bold transition-all shadow-md ${
                 summary.monitoring_active
-                  ? 'bg-[#FF7185]/15 border border-[#FF7185]/40 text-[#FF7185] hover:bg-[#FF7185] hover:text-white shadow-[0_0_15px_rgba(255,113,133,0.25)]'
-                  : 'bg-[#43D6A5]/15 border border-[#43D6A5]/40 text-[#43D6A5] hover:bg-[#43D6A5] hover:text-[#18263B] shadow-[0_0_15px_rgba(67,214,165,0.25)]'
+                  ? 'bg-bad/15 border border-bad/40 text-bad-ink hover:bg-bad hover:text-white shadow-soft'
+                  : 'bg-good/15 border border-good/40 text-good-ink hover:bg-good hover:text-ink shadow-soft'
               }`}
             >
               {summary.monitoring_active ? (
@@ -264,21 +263,21 @@ const Dashboard = () => {
             </button>
 
             {/* Simulation Speed & Controls Pill */}
-            <div className="flex items-center gap-1 bg-[#1E2F46] border border-[#364D6E]/60 p-1 rounded-xl text-xs font-mono-code shadow-neumorph-inset">
+            <div className="flex items-center gap-1 bg-sage border border-bluegrey/40 p-1 rounded-xl text-xs font-mono-code shadow-neumorph-inset">
               <button
                 onClick={handleSimPause}
-                className={`p-1.5 rounded-lg hover:bg-[#253750] transition-colors ${
-                  simStatus?.paused ? 'text-[#F5BD61] font-bold' : 'text-[#B8C5D8]'
+                className={`p-1.5 rounded-lg hover:bg-sage transition-colors ${
+                  simStatus?.paused ? 'text-amber-ink font-bold' : 'text-muted'
                 }`}
                 title={simStatus?.paused ? 'Resume Simulation' : 'Pause Simulation'}
               >
                 {simStatus?.paused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
               </button>
-              <div className="h-4 w-px bg-[#364D6E]/60 mx-0.5" />
+              <div className="h-4 w-px bg-bluegrey/60 mx-0.5" />
               <button
                 onClick={() => handleSimSpeed(1.0)}
                 className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
-                  simStatus?.speed === 1.0 ? 'bg-[#5B8DEF] text-white font-bold' : 'text-[#B8C5D8] hover:text-[#F3F6FC]'
+                  simStatus?.speed === 1.0 ? 'bg-forest text-white font-bold' : 'text-muted hover:text-ink'
                 }`}
               >
                 1×
@@ -286,7 +285,7 @@ const Dashboard = () => {
               <button
                 onClick={() => handleSimSpeed(2.5)}
                 className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
-                  simStatus?.speed === 2.5 ? 'bg-[#5B8DEF] text-white font-bold' : 'text-[#B8C5D8] hover:text-[#F3F6FC]'
+                  simStatus?.speed === 2.5 ? 'bg-forest text-white font-bold' : 'text-muted hover:text-ink'
                 }`}
               >
                 2.5×
@@ -294,15 +293,15 @@ const Dashboard = () => {
               <button
                 onClick={() => handleSimSpeed(5.0)}
                 className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
-                  simStatus?.speed === 5.0 ? 'bg-[#5B8DEF] text-white font-bold' : 'text-[#B8C5D8] hover:text-[#F3F6FC]'
+                  simStatus?.speed === 5.0 ? 'bg-forest text-white font-bold' : 'text-muted hover:text-ink'
                 }`}
               >
                 5×
               </button>
-              <div className="h-4 w-px bg-[#364D6E]/60 mx-0.5" />
+              <div className="h-4 w-px bg-bluegrey/60 mx-0.5" />
               <button
                 onClick={() => setIsResetModalOpen(true)}
-                className="p-1.5 rounded-lg hover:bg-[#253750] text-[#B8C5D8] hover:text-[#FF7185] transition-colors"
+                className="p-1.5 rounded-lg hover:bg-sage text-muted hover:text-bad-ink transition-colors"
                 title="Reset Simulation Data"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -361,43 +360,43 @@ const Dashboard = () => {
       </div>
 
       {/* ── BENTO 3: Visual Centerpiece — Blueprint Network Topology Visualizer ─── */}
-      <div className="bg-[#2B3F59]/80 backdrop-blur-md border border-[#364D6E]/70 rounded-2xl p-6 shadow-aurora-card relative overflow-hidden">
+      <div className="bg-surface border border-bluegrey/40 rounded-2xl p-6 shadow-soft relative overflow-hidden">
         {/* Top subtle aurora gradient accent */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#5B8DEF] via-[#43D6C5] to-[#B3A0FF]" />
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-bluegrey via-forest to-bluegrey" />
 
         {/* Header with technical workbench coordinates */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-white/[0.06]">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-bluegrey/25">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-[#5B8DEF]/15 border border-[#5B8DEF]/30 text-[#43D6C5] shadow-neumorph-sm">
-              <Layers className="w-5 h-5 text-[#43D6C5]" />
+            <div className="p-2.5 rounded-xl bg-bluegrey/15 border border-bluegrey/30 text-forest shadow-neumorph-sm">
+              <Layers className="w-5 h-5 text-forest" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-bold text-[#F3F6FC] font-mono-code flex items-center gap-2">
+              <h3 className="text-sm sm:text-base font-bold text-ink font-mono-code flex items-center gap-2">
                 Blueprint-Style Network Topology & Real-Time Flow Visualizer
               </h3>
-              <p className="text-xs text-[#B8C5D8] mt-0.5">
+              <p className="text-xs text-muted mt-0.5">
                 Physical sensor observation point, ingress traffic routing, containment barrier, and protected server endpoints
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-xs font-mono-code">
-            <span className="px-2.5 py-1 rounded-lg bg-[#1E2F46] border border-[#364D6E]/50 text-[#B8C5D8]">
-              LAT: <span className="text-[#43D6A5]">0.38 ms</span>
+            <span className="px-2.5 py-1 rounded-lg bg-sage border border-bluegrey/50 text-muted">
+              LAT: <span className="text-good-ink">0.38 ms</span>
             </span>
-            <span className="px-2.5 py-1 rounded-lg bg-[#1E2F46] border border-[#364D6E]/50 text-[#B8C5D8]">
-              FILTER: <span className="text-[#5B8DEF]">STRICT</span>
+            <span className="px-2.5 py-1 rounded-lg bg-sage border border-bluegrey/50 text-muted">
+              FILTER: <span className="text-bluegrey-ink">STRICT</span>
             </span>
           </div>
         </div>
 
         {/* Blueprint Engineering Canvas */}
-        <div className="blueprint-canvas rounded-xl border border-[#364D6E]/60 p-6 relative overflow-x-auto min-h-[300px] flex flex-col justify-between shadow-inner">
+        <div className="blueprint-canvas rounded-xl border border-bluegrey/40 p-6 relative overflow-x-auto min-h-[300px] flex flex-col justify-between shadow-inner">
           {/* Subtle Technical Grid Overlay & Coordinate Labels */}
-          <div className="absolute top-2 left-3 text-[10px] font-mono-code text-[#5B8DEF]/50 tracking-widest pointer-events-none">
+          <div className="absolute top-2 left-3 text-[10px] font-mono-code text-bluegrey-ink/50 tracking-widest pointer-events-none">
             TOPOLOGY GRID: SEC-ZONE-01 // COORD [37.7749, -122.4194]
           </div>
-          <div className="absolute top-2 right-3 text-[10px] font-mono-code text-[#43D6C5]/50 tracking-widest pointer-events-none">
+          <div className="absolute top-2 right-3 text-[10px] font-mono-code text-forest/50 tracking-widest pointer-events-none">
             PROTOCOL: TCP/IP STACK &bull; ICMP &bull; UDP
           </div>
 
@@ -408,36 +407,36 @@ const Dashboard = () => {
               onClick={() => setSelectedNode('attacker')}
               className={`p-4 rounded-xl border transition-all cursor-pointer relative ${
                 selectedNode === 'attacker'
-                  ? 'bg-[#1E2F46] border-[#FF7185] shadow-[0_0_15px_rgba(255,113,133,0.3)] ring-1 ring-[#FF7185]/50'
-                  : 'bg-[#1E2F46]/80 hover:bg-[#1E2F46] border-[#364D6E]/60 hover:border-[#FF7185]/40'
+                  ? 'bg-sage border-bad shadow-soft ring-1 ring-bad/50'
+                  : 'bg-sage/80 hover:bg-sage border-bluegrey/40 hover:border-bad/40'
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] uppercase font-mono-code font-bold text-[#FF7185] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF7185] animate-ping" />
+                <span className="text-[10px] uppercase font-mono-code font-bold text-bad-ink flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-bad animate-ping" />
                   Ingress Attacker
                 </span>
-                <Laptop className="w-4 h-4 text-[#FF7185]" />
+                <Laptop className="w-4 h-4 text-bad-ink" />
               </div>
-              <p className="font-mono-code text-xs font-bold text-[#F3F6FC] truncate">
+              <p className="font-mono-code text-xs font-bold text-ink truncate">
                 {activeAttackerIP}
               </p>
-              <p className="text-[10px] text-[#B8C5D8] mt-1 font-mono-code">
+              <p className="text-[10px] text-muted mt-1 font-mono-code">
                 Recon / SYN Flood Source
               </p>
-              <div className="mt-3 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono-code">
-                <span className="text-[#B8C5D8]">Threat Count:</span>
-                <span className="text-[#FF7185] font-bold">{summary.total_threats || 0}</span>
+              <div className="mt-3 pt-2 border-t border-bluegrey/25 flex items-center justify-between text-[10px] font-mono-code">
+                <span className="text-muted">Threat Count:</span>
+                <span className="text-bad-ink font-bold">{summary.total_threats || 0}</span>
               </div>
             </div>
 
             {/* Connection Arrow 1 */}
-            <div className="hidden md:flex flex-col items-center justify-center text-[#43D6C5] font-mono-code text-[10px]">
+            <div className="hidden md:flex flex-col items-center justify-center text-forest font-mono-code text-[10px]">
               <div className="w-full flex items-center justify-center relative">
-                <div className="h-[2px] w-full bg-gradient-to-r from-[#FF7185] to-[#43D6C5] opacity-60" />
-                <ArrowRight className="w-4 h-4 text-[#43D6C5] absolute right-0 -top-2 animate-pulse" />
+                <div className="h-[2px] w-full bg-gradient-to-r from-bad to-forest opacity-60" />
+                <ArrowRight className="w-4 h-4 text-forest absolute right-0 -top-2 animate-pulse" />
               </div>
-              <span className="text-[9px] text-[#B8C5D8] mt-1">Raw Ingress</span>
+              <span className="text-[9px] text-muted mt-1">Raw Ingress</span>
             </div>
 
             {/* Node 2: Sensor / Sniffer Gateway */}
@@ -445,36 +444,36 @@ const Dashboard = () => {
               onClick={() => setSelectedNode('gateway')}
               className={`p-4 rounded-xl border transition-all cursor-pointer relative ${
                 selectedNode === 'gateway'
-                  ? 'bg-[#1E2F46] border-[#43D6C5] shadow-[0_0_15px_rgba(67,214,197,0.3)] ring-1 ring-[#43D6C5]/50'
-                  : 'bg-[#1E2F46]/80 hover:bg-[#1E2F46] border-[#364D6E]/60 hover:border-[#43D6C5]/40'
+                  ? 'bg-sage border-forest shadow-soft ring-1 ring-forest/50'
+                  : 'bg-sage/80 hover:bg-sage border-bluegrey/40 hover:border-forest/40'
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] uppercase font-mono-code font-bold text-[#43D6C5] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#43D6C5] animate-pulse" />
+                <span className="text-[10px] uppercase font-mono-code font-bold text-forest flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-forest animate-pulse" />
                   Sensor Sniffer
                 </span>
-                <Radio className="w-4 h-4 text-[#43D6C5]" />
+                <Radio className="w-4 h-4 text-forest" />
               </div>
-              <p className="font-mono-code text-xs font-bold text-[#F3F6FC]">
+              <p className="font-mono-code text-xs font-bold text-ink">
                 192.168.1.100
               </p>
-              <p className="text-[10px] text-[#B8C5D8] mt-1 font-mono-code">
+              <p className="text-[10px] text-muted mt-1 font-mono-code">
                 Promiscuous Wi-Fi Monitor
               </p>
-              <div className="mt-3 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono-code">
-                <span className="text-[#B8C5D8]">Mode:</span>
-                <span className="text-[#43D6A5] font-bold uppercase">{summary.monitoring_mode}</span>
+              <div className="mt-3 pt-2 border-t border-bluegrey/25 flex items-center justify-between text-[10px] font-mono-code">
+                <span className="text-muted">Mode:</span>
+                <span className="text-good-ink font-bold uppercase">{summary.monitoring_mode}</span>
               </div>
             </div>
 
             {/* Connection Arrow 2 */}
-            <div className="hidden md:flex flex-col items-center justify-center text-[#5B8DEF] font-mono-code text-[10px]">
+            <div className="hidden md:flex flex-col items-center justify-center text-bluegrey-ink font-mono-code text-[10px]">
               <div className="w-full flex items-center justify-center relative">
-                <div className="h-[2px] w-full bg-gradient-to-r from-[#43D6C5] to-[#5B8DEF] opacity-60" />
-                <ArrowRight className="w-4 h-4 text-[#5B8DEF] absolute right-0 -top-2 animate-pulse" />
+                <div className="h-[2px] w-full bg-gradient-to-r from-forest to-bluegrey opacity-60" />
+                <ArrowRight className="w-4 h-4 text-bluegrey-ink absolute right-0 -top-2 animate-pulse" />
               </div>
-              <span className="text-[9px] text-[#B8C5D8] mt-1">Inspection</span>
+              <span className="text-[9px] text-muted mt-1">Inspection</span>
             </div>
 
             {/* Node 3: Automated Containment Firewall */}
@@ -482,46 +481,46 @@ const Dashboard = () => {
               onClick={() => setSelectedNode('firewall')}
               className={`p-4 rounded-xl border transition-all cursor-pointer relative ${
                 selectedNode === 'firewall'
-                  ? 'bg-[#1E2F46] border-[#5B8DEF] shadow-[0_0_15px_rgba(91,141,239,0.3)] ring-1 ring-[#5B8DEF]/50'
-                  : 'bg-[#1E2F46]/80 hover:bg-[#1E2F46] border-[#364D6E]/60 hover:border-[#5B8DEF]/40'
+                  ? 'bg-sage border-bluegrey shadow-soft ring-1 ring-bluegrey/50'
+                  : 'bg-sage/80 hover:bg-sage border-bluegrey/40 hover:border-bluegrey/40'
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] uppercase font-mono-code font-bold text-[#5B8DEF] flex items-center gap-1">
+                <span className="text-[10px] uppercase font-mono-code font-bold text-bluegrey-ink flex items-center gap-1">
                   <Shield className="w-3.5 h-3.5" />
                   Defense Barrier
                 </span>
-                <Lock className="w-4 h-4 text-[#5B8DEF]" />
+                <Lock className="w-4 h-4 text-bluegrey-ink" />
               </div>
-              <p className="font-mono-code text-xs font-bold text-[#F3F6FC]">
+              <p className="font-mono-code text-xs font-bold text-ink">
                 iptables Engine
               </p>
-              <p className="text-[10px] text-[#B8C5D8] mt-1 font-mono-code">
+              <p className="text-[10px] text-muted mt-1 font-mono-code">
                 Automated Containment
               </p>
-              <div className="mt-3 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono-code">
-                <span className="text-[#B8C5D8]">Blocks Enforced:</span>
-                <span className="text-[#43D6A5] font-bold">{summary.active_blocked_ips || 0}</span>
+              <div className="mt-3 pt-2 border-t border-bluegrey/25 flex items-center justify-between text-[10px] font-mono-code">
+                <span className="text-muted">Blocks Enforced:</span>
+                <span className="text-good-ink font-bold">{summary.active_blocked_ips || 0}</span>
               </div>
             </div>
           </div>
 
           {/* Blueprint Node Inspection Tray */}
-          <div className="mt-4 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4 text-xs font-mono-code">
+          <div className="mt-4 pt-4 border-t border-bluegrey/25 flex flex-wrap items-center justify-between gap-4 text-xs font-mono-code">
             <div className="flex flex-wrap items-center gap-3 text-[11px]">
-              <span className="text-[#B8C5D8]">Target Host:</span>
-              <span className="px-2 py-0.5 rounded bg-[#1E2F46] text-[#F3F6FC] border border-[#364D6E]/50">
+              <span className="text-muted">Target Host:</span>
+              <span className="px-2 py-0.5 rounded bg-sage text-ink border border-bluegrey/50">
                 127.0.0.1 (Loopback Protected)
               </span>
-              <span className="text-[#B8C5D8] ml-2">Monitored Ports:</span>
-              <span className="px-2 py-0.5 rounded bg-[#1E2F46] text-[#43D6C5] border border-[#364D6E]/50">
+              <span className="text-muted ml-2">Monitored Ports:</span>
+              <span className="px-2 py-0.5 rounded bg-sage text-forest border border-bluegrey/50">
                 80 (HTTP) &bull; 443 (HTTPS) &bull; 22 (SSH)
               </span>
             </div>
 
             <button
               onClick={() => navigate('/intelligence?ip=' + activeAttackerIP)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#253750] hover:bg-[#5B8DEF] hover:text-white border border-[#364D6E]/60 text-[#F3F6FC] text-xs transition-all shadow-neumorph-sm"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sage hover:bg-forest hover:text-white border border-bluegrey/40 text-ink text-xs transition-all shadow-neumorph-sm"
             >
               <span>Investigate Observed Source</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -541,55 +540,55 @@ const Dashboard = () => {
         </div>
 
         {/* Telemetry Sensor Activity Panel */}
-        <div className="bg-[#2B3F59]/80 backdrop-blur-md border border-[#364D6E]/70 rounded-xl p-5 shadow-aurora-card flex flex-col justify-between relative overflow-hidden">
+        <div className="bg-surface border border-bluegrey/40 rounded-xl p-5 shadow-soft flex flex-col justify-between relative overflow-hidden">
           {/* Top subtle aurora gradient line */}
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#43D6C5] to-[#5B8DEF] opacity-60" />
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-forest to-bluegrey opacity-60" />
 
           {/* Blueprint technical corner markers */}
-          <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-white/20 pointer-events-none" />
-          <div className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 border-b border-r border-white/20 pointer-events-none" />
+          <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-bluegrey/25 pointer-events-none" />
+          <div className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 border-b border-r border-bluegrey/25 pointer-events-none" />
 
           <div>
-            <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#F3F6FC] font-mono-code flex items-center gap-2">
-              <Radio className="w-4 h-4 text-[#43D6C5] animate-pulse" />
+            <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-ink font-mono-code flex items-center gap-2">
+              <Radio className="w-4 h-4 text-forest animate-pulse" />
               Network Telemetry
             </h3>
-            <p className="text-xs text-[#B8C5D8] mt-0.5">
+            <p className="text-xs text-muted mt-0.5">
               Host sniffer sensor health & activity
             </p>
 
             <div className="mt-5 space-y-3.5 font-mono-code text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
-                <span className="text-[#B8C5D8]">Engine Status:</span>
-                <span className={`font-bold ${summary.monitoring_active ? 'text-[#43D6A5]' : 'text-[#FF7185]'}`}>
+              <div className="flex items-center justify-between pb-2 border-b border-bluegrey/25">
+                <span className="text-muted">Engine Status:</span>
+                <span className={`font-bold ${summary.monitoring_active ? 'text-good-ink' : 'text-bad-ink'}`}>
                   {summary.monitoring_active ? 'ACTIVE' : 'STOPPED'}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
-                <span className="text-[#B8C5D8]">Packets Observed:</span>
-                <span className="text-[#F3F6FC] font-bold">
+              <div className="flex items-center justify-between pb-2 border-b border-bluegrey/25">
+                <span className="text-muted">Packets Observed:</span>
+                <span className="text-ink font-bold">
                   {(networkActivity?.packets_observed || 0).toLocaleString()}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
-                <span className="text-[#B8C5D8]">Unique Source IPs:</span>
-                <span className="text-[#43D6C5] font-bold">
+              <div className="flex items-center justify-between pb-2 border-b border-bluegrey/25">
+                <span className="text-muted">Unique Source IPs:</span>
+                <span className="text-forest font-bold">
                   {networkActivity?.unique_sources || 0}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
-                <span className="text-[#B8C5D8]">Suspicious Packets:</span>
-                <span className="text-[#F5BD61] font-bold">
+              <div className="flex items-center justify-between pb-2 border-b border-bluegrey/25">
+                <span className="text-muted">Suspicious Packets:</span>
+                <span className="text-amber-ink font-bold">
                   {(networkActivity?.suspicious_packets || 0).toLocaleString()}
                 </span>
               </div>
 
               <div className="flex items-center justify-between pb-1">
-                <span className="text-[#B8C5D8]">Last Incident:</span>
-                <span className="text-[#F3F6FC] text-[11px] truncate max-w-[130px]">
+                <span className="text-muted">Last Incident:</span>
+                <span className="text-ink text-[11px] truncate max-w-[130px]">
                   {summary.last_detection
                     ? new Date(summary.last_detection).toLocaleTimeString()
                     : 'None'}
@@ -598,10 +597,10 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/[0.06]">
+          <div className="mt-6 pt-4 border-t border-bluegrey/25">
             <button
               onClick={() => navigate('/threats')}
-              className="w-full py-2.5 px-3 rounded-lg bg-[#253750] hover:bg-[#5B8DEF] hover:text-[#F3F6FC] border border-[#364D6E]/60 text-[#F3F6FC] text-xs font-mono-code font-semibold flex items-center justify-center gap-1.5 transition-all shadow-neumorph-sm"
+              className="w-full py-2.5 px-3 rounded-lg bg-sage hover:bg-forest hover:text-white border border-bluegrey/40 text-ink text-xs font-mono-code font-semibold flex items-center justify-center gap-1.5 transition-all shadow-neumorph-sm"
             >
               <span>Inspect Live Threat Stream</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -617,24 +616,24 @@ const Dashboard = () => {
       </div>
 
       {/* ── BENTO 6: Recent Security Events Table ────────────────────────────── */}
-      <div className="bg-[#2B3F59]/80 backdrop-blur-md border border-[#364D6E]/70 rounded-xl p-5 shadow-aurora-card relative overflow-hidden">
+      <div className="bg-surface border border-bluegrey/40 rounded-xl p-5 shadow-soft relative overflow-hidden">
         {/* Top subtle aurora gradient line */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#5B8DEF] via-[#43D6C5] to-[#B3A0FF] opacity-60" />
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-bluegrey via-forest to-bluegrey opacity-60" />
 
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#F3F6FC] font-mono-code flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#43D6C5] shadow-[0_0_8px_#43D6C5]" />
+            <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-ink font-mono-code flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-forest shadow-soft" />
               Recent Security Events
             </h3>
-            <p className="text-xs text-[#B8C5D8] mt-0.5">
+            <p className="text-xs text-muted mt-0.5">
               Near-real-time triage log of incoming detections
             </p>
           </div>
 
           <button
             onClick={() => navigate('/threats')}
-            className="text-xs font-mono-code text-[#43D6C5] hover:text-[#5B8DEF] hover:underline flex items-center gap-1"
+            className="text-xs font-mono-code text-forest hover:text-bluegrey-ink hover:underline flex items-center gap-1"
           >
             <span>View All In Live Monitor</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -650,70 +649,70 @@ const Dashboard = () => {
 
       {/* ── Event Details Inspection Modal (Hybrid Aurora Frosted Glass) ──────── */}
       {selectedThreat && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-lg bg-[#253750] border border-[#364D6E]/80 rounded-2xl shadow-2xl p-6 overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF7185] to-[#5B8DEF]" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 animate-fadeIn">
+          <div className="relative w-full max-w-lg bg-surface border border-bluegrey/40 rounded-2xl shadow-soft p-6 overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-bad to-bluegrey" />
 
-            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-4">
+            <div className="flex items-center justify-between pb-3 border-b border-bluegrey/25 mb-4">
               <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#FF7185] animate-ping" />
-                <h3 className="text-base font-bold text-[#F3F6FC] font-mono-code">
+                <span className="w-2.5 h-2.5 rounded-full bg-bad animate-ping" />
+                <h3 className="text-base font-bold text-ink font-mono-code">
                   Incident #{selectedThreat.id} Telemetry Dossier
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedThreat(null)}
-                className="text-[#B8C5D8] hover:text-[#F3F6FC] text-lg font-bold p-1 rounded-lg hover:bg-[#1E2F46]"
+                className="text-muted hover:text-ink text-lg font-bold p-1 rounded-lg hover:bg-sage"
               >
                 &times;
               </button>
             </div>
 
             <div className="space-y-3 font-mono-code text-xs">
-              <div className="grid grid-cols-2 gap-2 bg-[#1E2F46] p-3.5 rounded-xl border border-[#364D6E]/50 shadow-neumorph-inset">
+              <div className="grid grid-cols-2 gap-2 bg-sage p-3.5 rounded-xl border border-bluegrey/50 shadow-neumorph-inset">
                 <div>
-                  <span className="text-[#B8C5D8] text-[11px]">Source IP:</span>
-                  <p className="text-[#43D6C5] font-bold text-sm mt-0.5">{selectedThreat.src_ip}</p>
+                  <span className="text-muted text-[11px]">Source IP:</span>
+                  <p className="text-forest font-bold text-sm mt-0.5">{selectedThreat.src_ip}</p>
                 </div>
                 <div>
-                  <span className="text-[#B8C5D8] text-[11px]">Destination IP:</span>
-                  <p className="text-[#F3F6FC] text-sm mt-0.5">{selectedThreat.dst_ip || 'Host System'}</p>
+                  <span className="text-muted text-[11px]">Destination IP:</span>
+                  <p className="text-ink text-sm mt-0.5">{selectedThreat.dst_ip || 'Host System'}</p>
                 </div>
                 <div>
-                  <span className="text-[#B8C5D8] text-[11px]">Threat Vector:</span>
-                  <p className="text-[#FF7185] font-bold mt-0.5">{selectedThreat.threat_type}</p>
+                  <span className="text-muted text-[11px]">Threat Vector:</span>
+                  <p className="text-bad-ink font-bold mt-0.5">{selectedThreat.threat_type}</p>
                 </div>
                 <div>
-                  <span className="text-[#B8C5D8] text-[11px]">Packet Count:</span>
-                  <p className="text-[#F3F6FC] font-bold mt-0.5">{selectedThreat.count || 1}</p>
+                  <span className="text-muted text-[11px]">Packet Count:</span>
+                  <p className="text-ink font-bold mt-0.5">{selectedThreat.count || 1}</p>
                 </div>
               </div>
 
               <div>
-                <span className="text-[#B8C5D8] block mb-1">Detection Logic / Rule Triggered:</span>
-                <p className="p-3 rounded-xl bg-[#18263B] border border-[#364D6E]/50 text-[#B8C5D8] leading-relaxed font-sans text-xs">
+                <span className="text-muted block mb-1">Detection Logic / Rule Triggered:</span>
+                <p className="p-3 rounded-xl bg-mist border border-bluegrey/50 text-muted leading-relaxed font-sans text-xs">
                   {selectedThreat.detection_reason || 'Threshold-based packet inspection triggered alert.'}
                 </p>
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <span className="text-[#B8C5D8]">Event Source:</span>
-                <span className="px-2.5 py-0.5 rounded-md bg-[#1E2F46] border border-[#364D6E]/50 text-[#43D6C5]">
+                <span className="text-muted">Event Source:</span>
+                <span className="px-2.5 py-0.5 rounded-md bg-sage border border-bluegrey/50 text-forest">
                   {selectedThreat.event_source === 'simulation' ? 'DEMO SIMULATION' : 'LIVE WI-FI CAPTURE'}
                 </span>
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end gap-3 pt-3 border-t border-white/[0.08]">
+            <div className="mt-6 flex justify-end gap-3 pt-3 border-t border-bluegrey/25">
               <button
                 onClick={() => navigate(`/intelligence?ip=${selectedThreat.src_ip}`)}
-                className="px-4 py-2 rounded-lg bg-[#5B8DEF] hover:bg-[#5B8DEF]/90 text-[#F3F6FC] text-xs font-mono-code font-semibold transition-all shadow-[0_0_12px_rgba(91,141,239,0.3)]"
+                className="px-4 py-2 rounded-lg bg-forest hover:bg-forest/90 text-white text-xs font-mono-code font-semibold transition-all shadow-soft"
               >
                 Investigate Source IP
               </button>
               <button
                 onClick={() => setSelectedThreat(null)}
-                className="px-4 py-2 rounded-lg bg-[#1E2F46] border border-[#364D6E]/50 hover:bg-[#253750] text-xs font-mono-code text-[#B8C5D8] hover:text-[#F3F6FC] shadow-neumorph-sm"
+                className="px-4 py-2 rounded-lg bg-sage border border-bluegrey/50 hover:bg-sage text-xs font-mono-code text-muted hover:text-ink shadow-neumorph-sm"
               >
                 Close
               </button>

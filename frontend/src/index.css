@@ -2,138 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ------------------------------------------------------------------
+   Theme tokens — Forest Sage Green + Blue Grey (space-separated RGB so
+   Tailwind opacity modifiers like bg-forest/20 keep working).
+------------------------------------------------------------------- */
 :root {
-  color-scheme: dark;
+  --c-forest: 84 118 106;      /* #54766A  primary, sidebar, active actions */
+  --c-bluegrey: 130 150 165;   /* #8296A5  secondary, info, ordinary links  */
+  --c-sage: 214 223 218;       /* #D6DFDA  panels, secondary backgrounds    */
+  --c-mist: 236 239 234;       /* #ECEFEA  page background                  */
+  --c-surface: 255 255 255;    /* #FFFFFF  cards, inputs                    */
+  --c-ink: 51 65 85;           /* #334155  headings / primary text          */
+  --c-muted: 100 116 139;      /* #64748B  secondary text                   */
+  --c-good: 124 155 131;       /* #7C9B83  success / connected              */
+  --c-amber: 197 166 109;      /* #C5A66D  warning / pending                */
+  --c-bad: 200 120 120;        /* #C87878  error / failed                   */
+
+  /* Darker, text-safe shades of the status colors */
+  --c-bluegrey-ink: 82 100 115;
+  --c-good-ink: 69 104 77;
+  --c-amber-ink: 128 98 40;
+  --c-bad-ink: 160 74 74;
+
+  color-scheme: light;
 }
 
 body {
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #18263B;
-  color: #F3F6FC;
+  background-color: rgb(var(--c-mist));
+  color: rgb(var(--c-ink));
   overflow-x: hidden;
-  letter-spacing: -0.01em;
 }
 
-/* Custom Hybrid Aurora Scrollbar */
-::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+/* Consistent keyboard focus ring */
+:focus-visible {
+  outline: 2px solid rgb(var(--c-forest));
+  outline-offset: 2px;
+}
+button:disabled,
+input:disabled,
+select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-::-webkit-scrollbar-track {
-  background: #18263B;
-}
-
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgb(var(--c-mist)); }
 ::-webkit-scrollbar-thumb {
-  background: #2B3F59;
-  border: 1px solid rgba(91, 141, 239, 0.2);
+  background: rgb(var(--c-bluegrey) / 0.55);
   border-radius: 4px;
 }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--c-bluegrey)); }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #364D6E;
-  border-color: rgba(91, 141, 239, 0.4);
-}
-
-/* Technical Blueprint Grid */
+/* Legacy helper classes, restyled to the calm theme */
 .cyber-grid,
 .blueprint-grid {
-  background-color: #18263B;
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(91, 141, 239, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(91, 141, 239, 0.05) 1px, transparent 1px);
+  background-color: rgb(var(--c-mist));
 }
 
-/* High-tech engineering blueprint canvas */
 .blueprint-canvas {
-  background-color: #1A2A40;
-  background-size: 20px 20px, 100px 100px;
-  background-image: 
-    linear-gradient(to right, rgba(91, 141, 239, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(91, 141, 239, 0.07) 1px, transparent 1px),
-    linear-gradient(to right, rgba(67, 214, 197, 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(67, 214, 197, 0.12) 1px, transparent 1px);
+  background-color: rgb(var(--c-surface));
+  background-size: 24px 24px;
+  background-image:
+    linear-gradient(to right, rgb(var(--c-bluegrey) / 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--c-bluegrey) / 0.12) 1px, transparent 1px);
 }
 
-/* Hybrid Aurora Glass Cards */
 .aurora-glass-card {
-  background: rgba(43, 63, 89, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(91, 141, 239, 0.18);
-  box-shadow: 0 8px 30px -4px rgba(10, 18, 30, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  background: rgb(var(--c-surface));
+  border: 1px solid rgb(var(--c-bluegrey) / 0.35);
+  box-shadow: 0 1px 2px rgba(51, 65, 85, 0.06), 0 2px 8px rgba(51, 65, 85, 0.05);
 }
+.aurora-glass-card:hover { border-color: rgb(var(--c-bluegrey) / 0.6); }
 
-.aurora-glass-card:hover {
-  border-color: rgba(91, 141, 239, 0.32);
-  box-shadow: 0 12px 36px -4px rgba(10, 18, 30, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.09);
-}
-
-/* Soft Neumorphic Controls */
 .aurora-neumorph-btn {
-  background: #253750;
-  border: 1px solid rgba(91, 141, 239, 0.22);
-  box-shadow: 2px 2px 6px rgba(12, 19, 31, 0.45), -1px -1px 3px rgba(255, 255, 255, 0.05);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgb(var(--c-surface));
+  border: 1px solid rgb(var(--c-bluegrey) / 0.4);
+  box-shadow: 0 1px 2px rgba(51, 65, 85, 0.06);
+  transition: background-color 0.15s, border-color 0.15s;
 }
-
-.aurora-neumorph-btn:hover {
-  background: #2B3F59;
-  border-color: rgba(91, 141, 239, 0.38);
-  box-shadow: 3px 3px 8px rgba(12, 19, 31, 0.5), -1.5px -1.5px 4px rgba(255, 255, 255, 0.08);
-}
-
+.aurora-neumorph-btn:hover { background: rgb(var(--c-sage)); border-color: rgb(var(--c-bluegrey) / 0.7); }
 .aurora-neumorph-btn:active,
 .aurora-neumorph-active {
-  background: #1E2F46;
-  border-color: rgba(67, 214, 197, 0.4);
-  box-shadow: inset 2px 2px 5px rgba(10, 16, 26, 0.6), inset -1px -1px 2px rgba(255, 255, 255, 0.04);
+  background: rgb(var(--c-sage));
+  border-color: rgb(var(--c-forest) / 0.6);
 }
-
 .aurora-neumorph-inset {
-  background: #1E2F46;
-  border: 1px solid rgba(91, 141, 239, 0.2);
-  box-shadow: inset 2px 2px 5px rgba(10, 16, 26, 0.55), inset -1px -1px 3px rgba(255, 255, 255, 0.04);
+  background: rgb(var(--c-sage) / 0.6);
+  border: 1px solid rgb(var(--c-bluegrey) / 0.35);
 }
 
-/* Glowing cyber/aurora borders */
-.cyber-border {
-  border: 1px solid rgba(91, 141, 239, 0.18);
-  box-shadow: 0 4px 20px -2px rgba(10, 18, 30, 0.3);
-}
+.cyber-border { border: 1px solid rgb(var(--c-bluegrey) / 0.35); }
+.cyber-border:hover { border-color: rgb(var(--c-bluegrey) / 0.6); }
 
-.cyber-border:hover {
-  border-color: rgba(91, 141, 239, 0.32);
-}
+.font-mono-code { font-family: 'JetBrains Mono', Consolas, Monaco, monospace; }
 
-/* Monospace technical data styling */
-.font-mono-code {
-  font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
-}
-
-/* Subtle corner crosshairs for technical blueprint feel */
-.blueprint-corner {
-  position: relative;
-}
+/* Decorative blueprint crosshairs removed for a cleaner look */
+.blueprint-corner { position: relative; }
 .blueprint-corner::before,
-.blueprint-corner::after {
-  content: '';
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  pointer-events: none;
-}
-.blueprint-corner::before {
-  top: 4px;
-  left: 4px;
-  border-top: 1.5px solid rgba(67, 214, 197, 0.4);
-  border-left: 1.5px solid rgba(67, 214, 197, 0.4);
-}
-.blueprint-corner::after {
-  bottom: 4px;
-  right: 4px;
-  border-bottom: 1.5px solid rgba(67, 214, 197, 0.4);
-  border-right: 1.5px solid rgba(67, 214, 197, 0.4);
+.blueprint-corner::after { content: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

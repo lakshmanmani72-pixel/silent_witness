@@ -94,73 +94,73 @@ const BlockedIPs = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-aurora-error animate-ping" />
-            <span className="text-[10px] uppercase font-bold text-aurora-teal tracking-widest font-sans">
+            <span className="w-2 h-2 rounded-full bg-bad animate-ping" />
+            <span className="text-[10px] uppercase font-bold text-forest tracking-widest font-sans">
               Defensive Firewall Response
             </span>
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-aurora-text flex items-center gap-2">
-            <Ban className="w-5 h-5 text-aurora-error" />
+          <h1 className="text-xl font-bold tracking-tight text-ink flex items-center gap-2">
+            <Ban className="w-5 h-5 text-bad-ink" />
             Automated Response & Blocked IPs
           </h1>
-          <p className="text-xs text-aurora-muted mt-1 font-sans">
+          <p className="text-xs text-muted mt-1 font-sans">
             Managed containment list. Active rules are temporarily enforced to mitigate high-severity attacks.
           </p>
         </div>
 
         <button
           onClick={fetchBlocks}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-aurora-surface border border-aurora-border/40 hover:border-aurora-teal/50 text-xs text-aurora-text hover:text-aurora-teal transition-all shadow-aurora-card"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-surface border border-bluegrey/40 hover:border-forest/50 text-xs text-ink hover:text-forest transition-all shadow-soft"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-aurora-teal' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-forest' : ''}`} />
           <span className="font-sans font-medium">Refresh Containment</span>
         </button>
       </div>
 
       {/* Mini KPI Bento Strip */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl p-4 shadow-aurora-card relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-aurora-blue/60 to-transparent" />
-          <span className="text-[10px] uppercase font-bold text-aurora-muted tracking-wider block font-sans">
+        <div className="bg-surface border border-bluegrey/40 rounded-xl p-4 shadow-soft relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-bluegrey/60 to-transparent" />
+          <span className="text-[10px] uppercase font-bold text-muted tracking-wider block font-sans">
             Total Rules
           </span>
-          <p className="text-2xl font-bold text-aurora-text mt-1">{total}</p>
+          <p className="text-2xl font-bold text-ink mt-1">{total}</p>
         </div>
 
-        <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl p-4 shadow-aurora-card relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-aurora-error/80 to-transparent" />
-          <span className="text-[10px] uppercase font-bold text-aurora-muted tracking-wider block font-sans">
+        <div className="bg-surface border border-bluegrey/40 rounded-xl p-4 shadow-soft relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-bad/80 to-transparent" />
+          <span className="text-[10px] uppercase font-bold text-muted tracking-wider block font-sans">
             Active Containments
           </span>
-          <p className="text-2xl font-bold text-aurora-error mt-1">{activeCount}</p>
+          <p className="text-2xl font-bold text-bad-ink mt-1">{activeCount}</p>
         </div>
 
-        <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl p-4 shadow-aurora-card relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-aurora-teal/80 to-transparent" />
-          <span className="text-[10px] uppercase font-bold text-aurora-muted tracking-wider block font-sans">
+        <div className="bg-surface border border-bluegrey/40 rounded-xl p-4 shadow-soft relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-forest/80 to-transparent" />
+          <span className="text-[10px] uppercase font-bold text-muted tracking-wider block font-sans">
             Simulated / Dry-Run
           </span>
-          <p className="text-2xl font-bold text-aurora-teal mt-1">{dryRunCount}</p>
+          <p className="text-2xl font-bold text-forest mt-1">{dryRunCount}</p>
         </div>
 
-        <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl p-4 shadow-aurora-card relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-aurora-warning/80 to-transparent" />
-          <span className="text-[10px] uppercase font-bold text-aurora-muted tracking-wider block font-sans">
+        <div className="bg-surface border border-bluegrey/40 rounded-xl p-4 shadow-soft relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber/80 to-transparent" />
+          <span className="text-[10px] uppercase font-bold text-muted tracking-wider block font-sans">
             Critical Severity
           </span>
-          <p className="text-2xl font-bold text-aurora-warning mt-1">{criticalCount}</p>
+          <p className="text-2xl font-bold text-amber-ink mt-1">{criticalCount}</p>
         </div>
       </div>
 
       {/* Safety Mode Banner */}
-      <div className="p-4 bg-gradient-to-r from-aurora-surface/95 to-aurora-panel/70 border border-aurora-teal/30 rounded-xl flex items-start gap-3 shadow-aurora-card">
-        <div className="w-8 h-8 rounded-lg bg-aurora-teal/10 border border-aurora-teal/30 flex items-center justify-center shrink-0 mt-0.5">
-          <Info className="w-4 h-4 text-aurora-teal" />
+      <div className="p-4 bg-sage/50 border border-forest/30 rounded-xl flex items-start gap-3 shadow-soft">
+        <div className="w-8 h-8 rounded-lg bg-forest/10 border border-forest/30 flex items-center justify-center shrink-0 mt-0.5">
+          <Info className="w-4 h-4 text-forest" />
         </div>
-        <div className="text-xs font-sans text-aurora-muted leading-relaxed">
-          <p className="font-semibold text-aurora-text font-mono-code mb-0.5 flex items-center gap-2">
+        <div className="text-xs font-sans text-muted leading-relaxed">
+          <p className="font-semibold text-ink font-mono-code mb-0.5 flex items-center gap-2">
             Defensive Response Engine: Safe Dry-Run Active
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-aurora-teal/15 text-aurora-teal border border-aurora-teal/30">
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-forest/15 text-forest border border-forest/30">
               SAFE VIVA MODE
             </span>
           </p>
@@ -169,15 +169,15 @@ const BlockedIPs = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl p-4 shadow-aurora-card flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 text-xs">
+      <div className="bg-surface border border-bluegrey/40 rounded-xl p-4 shadow-soft flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 text-xs">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-aurora-muted" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
           <input
             type="text"
             placeholder="Search by IP address (e.g., 192.168.1.105)..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-aurora-bg/70 border border-aurora-border/40 rounded-lg pl-9 pr-4 py-2 text-aurora-text placeholder:text-aurora-muted/50 focus:outline-none focus:border-aurora-blue/60 transition-colors"
+            className="w-full bg-mist/70 border border-bluegrey/40 rounded-lg pl-9 pr-4 py-2 text-ink placeholder:text-muted/50 focus:outline-none focus:border-bluegrey/40 transition-colors"
           />
         </div>
 
@@ -185,7 +185,7 @@ const BlockedIPs = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+            className="bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
           >
             <option value="">All Statuses</option>
             <option value="active">Active Only</option>
@@ -196,7 +196,7 @@ const BlockedIPs = () => {
           <select
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
-            className="bg-aurora-bg/70 border border-aurora-border/40 rounded-lg px-3 py-2 text-aurora-text focus:outline-none focus:border-aurora-blue/60 transition-colors"
+            className="bg-mist/70 border border-bluegrey/40 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-bluegrey/40 transition-colors"
           >
             <option value="">All Severities</option>
             <option value="CRITICAL">Critical</option>
@@ -206,11 +206,11 @@ const BlockedIPs = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-aurora-surface/90 border border-aurora-border/40 backdrop-blur-md rounded-xl shadow-aurora-card overflow-hidden text-xs">
+      <div className="bg-surface border border-bluegrey/40 rounded-xl shadow-soft overflow-hidden text-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-aurora-border/40 text-aurora-muted uppercase text-[10px] tracking-wider bg-aurora-bg/40 font-sans">
+              <tr className="border-b border-bluegrey/40 text-muted uppercase text-[10px] tracking-wider bg-mist/40 font-sans">
                 <th className="py-3.5 px-4 font-semibold">Target IP</th>
                 <th className="py-3.5 px-4 font-semibold">Trigger Threat</th>
                 <th className="py-3.5 px-4 font-semibold">Severity</th>
@@ -221,11 +221,11 @@ const BlockedIPs = () => {
                 <th className="py-3.5 px-4 font-semibold text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-aurora-border/20">
+            <tbody className="divide-y divide-bluegrey/20">
               {blocks.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="py-14 text-center text-aurora-muted font-sans">
-                    <ShieldCheck className="w-8 h-8 mx-auto mb-2 text-aurora-teal/50" />
+                  <td colSpan="8" className="py-14 text-center text-muted font-sans">
+                    <ShieldCheck className="w-8 h-8 mx-auto mb-2 text-forest/50" />
                     No active or historical containment records matching current criteria.
                   </td>
                 </tr>
@@ -236,17 +236,17 @@ const BlockedIPs = () => {
                   const isExpiring = isActive && remaining !== 'Expired';
 
                   return (
-                    <tr key={b.id} className="hover:bg-aurora-panel/40 transition-colors">
+                    <tr key={b.id} className="hover:bg-sage/40 transition-colors">
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <button
                           onClick={() => navigate(`/intelligence?ip=${b.ip}`)}
-                          className="font-bold text-aurora-teal hover:underline tracking-tight"
+                          className="font-bold text-forest hover:underline tracking-tight"
                         >
                           {b.ip}
                         </button>
                       </td>
 
-                      <td className="py-3.5 px-4 text-aurora-text whitespace-nowrap font-medium">
+                      <td className="py-3.5 px-4 text-ink whitespace-nowrap font-medium">
                         {b.threat_type || 'Attack Vector'}
                       </td>
 
@@ -257,22 +257,22 @@ const BlockedIPs = () => {
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
                           b.dry_run
-                            ? 'bg-aurora-teal/15 text-aurora-teal border border-aurora-teal/30'
-                            : 'bg-aurora-error/15 text-aurora-error border border-aurora-error/30'
+                            ? 'bg-forest/15 text-forest border border-forest/30'
+                            : 'bg-bad/15 text-bad-ink border border-bad/30'
                         }`}>
                           {b.dry_run ? 'DRY-RUN' : 'REAL IPTABLES'}
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4 text-aurora-muted whitespace-nowrap">
+                      <td className="py-3.5 px-4 text-muted whitespace-nowrap">
                         {new Date(b.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                       </td>
 
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <span className={`flex items-center gap-1.5 font-bold ${
-                          isExpiring ? 'text-aurora-warning animate-pulse' : 'text-aurora-muted'
+                          isExpiring ? 'text-amber-ink animate-pulse' : 'text-muted'
                         }`}>
-                          <Clock className="w-3.5 h-3.5 text-aurora-muted" />
+                          <Clock className="w-3.5 h-3.5 text-muted" />
                           {remaining}
                         </span>
                       </td>
@@ -280,8 +280,8 @@ const BlockedIPs = () => {
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
                           isActive
-                            ? 'bg-aurora-error/15 text-aurora-error border border-aurora-error/30'
-                            : 'bg-aurora-bg/60 text-aurora-muted border border-aurora-border/30'
+                            ? 'bg-bad/15 text-bad-ink border border-bad/30'
+                            : 'bg-mist/60 text-muted border border-bluegrey/30'
                         }`}>
                           {b.status}
                         </span>
@@ -294,13 +294,13 @@ const BlockedIPs = () => {
                               setTargetBlock(b);
                               setIsUnblockModalOpen(true);
                             }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-aurora-bg/80 hover:bg-aurora-teal hover:text-aurora-bg border border-aurora-border/40 hover:border-aurora-teal text-aurora-teal font-semibold transition-all shadow-sm"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-mist/80 hover:bg-forest hover:text-white border border-bluegrey/40 hover:border-forest text-forest font-semibold transition-all shadow-sm"
                           >
                             <Unlock className="w-3 h-3" />
                             <span>Unblock</span>
                           </button>
                         ) : (
-                          <span className="text-aurora-muted/40 text-[11px] font-sans">Deactivated</span>
+                          <span className="text-muted/40 text-[11px] font-sans">Deactivated</span>
                         )}
                       </td>
                     </tr>
