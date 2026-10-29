@@ -102,7 +102,7 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing SILENT WITNESS database and real-time defensive engine...")
     await init_db()
     set_ws_broadcaster(broadcast_ws_message)
-    set_packet_broadcaster(broadcast_ws_message)
+    set_packet_broadcaster(broadcast_ws_message, asyncio.get_running_loop())
 
     # Start block expiry and live telemetry background tasks
     expiry_task = asyncio.create_task(_expiry_worker(), name="block_expiry_worker")

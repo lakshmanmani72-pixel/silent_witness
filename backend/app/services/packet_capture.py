@@ -45,7 +45,11 @@ except Exception as exc:
 _packet_broadcast_callback: Optional[Callable[[dict], Any]] = None
 
 
-def set_packet_broadcaster(fn: Callable[[dict], Any]) -> None:
+_main_event_loop = None
+
+def set_packet_broadcaster(fn: Callable[[dict], Any], loop=None) -> None:
+    global _main_event_loop
+    _main_event_loop = loop
     """Set the async or sync callback used to broadcast live packet events via WebSocket."""
     global _packet_broadcast_callback
     _packet_broadcast_callback = fn
@@ -597,7 +601,7 @@ class PacketCapture:
                         })
                         if asyncio.iscoroutine(res):
                             try:
-                                loop = asyncio.get_running_loop()
+                                loop = _main_event_loop or asyncio.get_running_loop()
                                 asyncio.run_coroutine_threadsafe(res, loop)
                             except RuntimeError:
                                 pass
@@ -749,7 +753,7 @@ class PacketCapture:
                     })
                     if asyncio.iscoroutine(res):
                         try:
-                            loop = asyncio.get_running_loop()
+                            loop = _main_event_loop or asyncio.get_running_loop()
                             asyncio.run_coroutine_threadsafe(res, loop)
                         except RuntimeError:
                             pass

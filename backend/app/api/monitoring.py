@@ -35,11 +35,20 @@ class StartMonitoringPayload(BaseModel):
 
 class SimulationControlPayload(BaseModel):
     speed: Optional[float] = 1.0
+    scenario: Optional[str] = "mixed"
+
+
+class ScenarioPayload(BaseModel):
+    scenario: str
+
+
+class SpeedPayload(BaseModel):
+    speed: float
 
 
 class InjectTrafficPayload(BaseModel):
-    type: str = "normal"  # "syn_flood", "port_scan", "normal", "ping", "dns"
-    count: int = 15
+    type: str = "normal"  # "syn_flood", "port_scan", "normal", "ping", "dns", "suspicious_flags"
+    count: int = 25
 
 
 # ── Live Monitoring & Packet Dissection Endpoints ──────────────────────────
@@ -77,7 +86,7 @@ async def get_recent_packets(
     return {
         "total_captured": cap.packets_captured,
         "active": cap.active,
-        "interface": cap.interface,
+        "interface": cap.interface or "SIMULATION",
         "count": len(packets),
         "packets": packets,
     }
@@ -243,7 +252,7 @@ async def start_simulation(payload: SimulationControlPayload = SimulationControl
         cap.stop()
 
     sim = get_simulator()
-    await sim.start(speed=payload.speed or 1.0)
+    await sim.start(speed=payload.speed or 1.0, scenario=payload.scenario or "mixed")
     return {
         "message": "Demonstration simulation started",
         "mode": "simulation",
@@ -283,9 +292,28 @@ async def reset_simulation():
     return {"message": "Simulation and detector state reset", "status": sim.status}
 
 
+@router.post("/simulation/scenario")
+async def set_simulation_scenario(payload: ScenarioPayload):
+    """Switch simulation scenario on the fly (normal, syn_flood, port_scan, suspicious_flags, mixed)."""
+    sim = get_simulator()
+    if not sim.status["running"] or sim.status["paused"]:
+        await sim.start(speed=sim.status.get("speed", 1.0) or 1.0, scenario=payload.scenario)
+    else:
+        sim.set_scenario(payload.scenario)
+    return {"message": f"Simulation scenario switched to {payload.scenario}", "status": sim.status}
+
+
+@router.post("/simulation/speed")
+async def set_simulation_speed(payload: SpeedPayload):
+    """Change simulation speed multiplier on the fly."""
+    sim = get_simulator()
+    sim.set_speed(payload.speed)
+    return {"message": f"Simulation speed set to {payload.speed}x", "status": sim.status}
+
+
 @router.get("/simulation/status")
 async def get_simulation_status():
-    """Get detailed simulation status."""
+    """Get detailed simulation status with real-time calculated metrics."""
     sim = get_simulator()
     return sim.status
 

@@ -5,6 +5,7 @@ Implements:
   • SYN Flood detection  (configurable rolling window + thresholds)
   • Port Scan detection  (distinct-port counting in rolling window)
   • Central severity classification
+  • Explainable threat evidence metadata
 
 All thresholds are read from the live application settings so they can be
 updated at runtime via the Settings page without restarting the backend.
@@ -134,6 +135,8 @@ class IPState:
     def __init__(self, syn_window: float, port_window: float):
         self.syn_counter  = RollingCounter(syn_window)
         self.port_tracker = RollingSet(port_window)
+        self.first_seen   = datetime.now(timezone.utc).isoformat()
+        self.last_seen    = self.first_seen
         self.last_alert_time: dict[str, float] = {}  # threat_type → monotonic
 
     def seconds_since_last_alert(self, threat_type: str) -> float:
@@ -145,6 +148,9 @@ class IPState:
     def record_alert(self, threat_type: str) -> None:
         self.last_alert_time[threat_type] = time.monotonic()
 
+    def update_seen(self) -> None:
+        self.last_seen = datetime.now(timezone.utc).isoformat()
+
 
 # ── Main detector ─────────────────────────────────────────────────────────────
 
@@ -153,23 +159,20 @@ class ThreatDetector:
     Stateful, in-process threat detector.
 
     Call ``inspect_packet(meta)`` for every captured packet.
-    The detector returns a detection result dict when a threshold is crossed
-    and the cooldown has elapsed, or None if no alert should be raised.
-
-    Thread-safety: this class is NOT thread-safe.  Call it from a single
-    asyncio task.  All heavy work is synchronous CPU work; no I/O is done.
+    The detector returns a detection result dict with explainable evidence when
+    a threshold is crossed and the cooldown has elapsed, or None if no alert should be raised.
     """
 
     def __init__(self):
         # per-IP state keyed by source IP string
         self._ip_state: dict[str, IPState] = {}
-        # live threshold cache – refreshed periodically
-        self._syn_critical     = 100
-        self._syn_high         = 50
+        # live threshold cache – calibrated for responsive educational demonstration
+        self._syn_critical     = 30
+        self._syn_high         = 15
         self._syn_window       = 10.0
-        self._port_high        = 100
+        self._port_high        = 12
         self._port_window      = 60.0
-        self._cooldown         = 30.0
+        self._cooldown         = 2.0  # responsive for demonstration
         # housekeeping
         self._last_cleanup     = time.monotonic()
         self._cleanup_interval = 300.0  # clean stale IPs every 5 min
@@ -182,7 +185,7 @@ class ThreatDetector:
         syn_window: float = 10.0,
         port_high: int = 100,
         port_window: float = 60.0,
-        cooldown: float = 30.0,
+        cooldown: float = 15.0,
     ) -> None:
         self._syn_critical = syn_critical
         self._syn_high     = syn_high
@@ -190,7 +193,6 @@ class ThreatDetector:
         self._port_high    = port_high
         self._port_window  = port_window
         self._cooldown     = cooldown
-        # propagate window changes to existing state objects
         for state in self._ip_state.values():
             state.syn_counter.update_window(syn_window)
             state.port_tracker.update_window(port_window)
@@ -222,6 +224,8 @@ class ThreatDetector:
 
         self._maybe_cleanup()
         state = self._get_state(src_ip)
+        state.update_seen()
+        now_iso = datetime.now(timezone.utc).isoformat()
 
         # ── SYN Flood check ───────────────────────────────────────────────────
         # A SYN-only packet has the SYN flag set WITHOUT ACK.
@@ -237,20 +241,37 @@ class ThreatDetector:
             if severity in ("CRITICAL", "HIGH"):
                 if state.seconds_since_last_alert("SYN_FLOOD") >= self._cooldown:
                     state.record_alert("SYN_FLOOD")
+                    thresh = self._syn_critical if severity == "CRITICAL" else self._syn_high
                     return {
-                        "threat_type":      "SYN_FLOOD",
-                        "src_ip":           src_ip,
-                        "dst_ip":           meta.get("dst_ip"),
-                        "src_port":         meta.get("src_port"),
-                        "dst_port":         dst_port,
-                        "protocol":         protocol,
-                        "count":            syn_count,
-                        "severity":         severity,
-                        "detection_reason": (
+                        "threat_type":          "SYN_FLOOD",
+                        "src_ip":               src_ip,
+                        "dst_ip":               meta.get("dst_ip"),
+                        "src_port":             meta.get("src_port"),
+                        "dst_port":             dst_port,
+                        "protocol":             protocol,
+                        "count":                syn_count,
+                        "severity":             severity,
+                        "threshold":            thresh,
+                        "window_seconds":       self._syn_window,
+                        "first_seen":           state.first_seen,
+                        "last_seen":            now_iso,
+                        "detection_reason":     (
                             f"Detected {syn_count} SYN-only packets from {src_ip} "
                             f"within {self._syn_window}s window "
                             f"(threshold: CRITICAL>{self._syn_critical}, HIGH>{self._syn_high})"
                         ),
+                        "simple_explanation":   (
+                            f"One simulated source ({src_ip}) sent {syn_count} SYN packets during the "
+                            f"{self._syn_window}s detection window, exceeding the configured threshold of {thresh}. "
+                            f"SILENT WITNESS classified this activity as a possible SYN flood."
+                        ),
+                        "technical_reason":     (
+                            f"TCP connection half-open sequence detected without completing 3-way handshake (no ACK). "
+                            f"Observed rate: {syn_count} SYN-only pkts/{self._syn_window}s vs threshold {thresh}. "
+                            f"Incomplete handshakes risk exhausting server connection state tables."
+                        ),
+                        "recommended_response": "Drop incoming SYN packets from source IP and activate TCP SYN cookies.",
+                        "response_status":      "SIMULATED_BLOCK (Safe Dry-Run)",
                     }
 
         # ── Port Scan check ───────────────────────────────────────────────────
@@ -265,26 +286,39 @@ class ThreatDetector:
                         port_high=self._port_high,
                     )
                     return {
-                        "threat_type":      "PORT_SCAN",
-                        "src_ip":           src_ip,
-                        "dst_ip":           meta.get("dst_ip"),
-                        "src_port":         meta.get("src_port"),
-                        "dst_port":         dst_port,
-                        "protocol":         protocol,
-                        "count":            port_count,
-                        "severity":         severity,
-                        "detection_reason": (
+                        "threat_type":          "PORT_SCAN",
+                        "src_ip":               src_ip,
+                        "dst_ip":               meta.get("dst_ip"),
+                        "src_port":             meta.get("src_port"),
+                        "dst_port":             dst_port,
+                        "protocol":             protocol,
+                        "count":                port_count,
+                        "severity":             severity,
+                        "threshold":            self._port_high,
+                        "window_seconds":       self._port_window,
+                        "first_seen":           state.first_seen,
+                        "last_seen":            now_iso,
+                        "detection_reason":     (
                             f"Source IP {src_ip} contacted {port_count} distinct destination "
                             f"ports within {self._port_window}s "
                             f"(threshold: >{self._port_high} ports)"
                         ),
+                        "simple_explanation":   (
+                            f"One simulated source ({src_ip}) contacted {port_count} distinct destination ports "
+                            f"within {self._port_window}s, exceeding the configured threshold of {self._port_high}. "
+                            f"SILENT WITNESS classified this as a port scanning attack."
+                        ),
+                        "technical_reason":     (
+                            f"Horizontal/vertical reconnaissance probe detected: {port_count} distinct destination ports "
+                            f"contacted across sliding window of {self._port_window}s (threshold >{self._port_high})."
+                        ),
+                        "recommended_response": "Temporarily rate-limit source IP and block further service enumeration.",
+                        "response_status":      "SIMULATED_BLOCK (Safe Dry-Run)",
                     }
 
         # ── Suspicious Reconnaissance / Port Check ────────────────────────────
-        # Section 7.C: Allow the detector to log other suspicious events as MEDIUM severity
         if protocol == "TCP":
             # Check for stealth scans (NULL scan: no flags, FIN scan: F only, XMAS: F+P+U)
-            # Legitimate TCP teardown contains ACK ('A'). Stealth scans intentionally omit ACK.
             has_no_ack = "A" not in flags
             is_stealth_scan = has_no_ack and (
                 flags == "" or
@@ -295,15 +329,29 @@ class ThreatDetector:
                 state.record_alert("SUSPICIOUS_SCAN")
                 scan_type = "NULL Scan" if flags == "" else ("FIN Scan" if flags == "F" else "XMAS Scan")
                 return {
-                    "threat_type":      "SUSPICIOUS",
-                    "src_ip":           src_ip,
-                    "dst_ip":           meta.get("dst_ip"),
-                    "src_port":         meta.get("src_port"),
-                    "dst_port":         dst_port,
-                    "protocol":         "TCP",
-                    "count":            1,
-                    "severity":         "MEDIUM",
-                    "detection_reason": f"TCP {scan_type} probe detected (flags: '{flags}') indicating reconnaissance scan.",
+                    "threat_type":          "SUSPICIOUS",
+                    "src_ip":               src_ip,
+                    "dst_ip":               meta.get("dst_ip"),
+                    "src_port":             meta.get("src_port"),
+                    "dst_port":             dst_port,
+                    "protocol":             "TCP",
+                    "count":                1,
+                    "severity":             "MEDIUM",
+                    "threshold":            1,
+                    "window_seconds":       1.0,
+                    "first_seen":           state.first_seen,
+                    "last_seen":            now_iso,
+                    "detection_reason":     f"TCP {scan_type} probe detected (flags: '{flags}') indicating reconnaissance scan.",
+                    "simple_explanation":   (
+                        f"One simulated source ({src_ip}) transmitted an abnormal TCP probe ({scan_type}) "
+                        f"with flags '{flags or 'NONE'}'. Legitimate applications do not send these flag combinations."
+                    ),
+                    "technical_reason":     (
+                        f"RFC 793 violation: Stealth TCP scan probe detected (flags='{flags}'). "
+                        f"Crafted to bypass stateful firewalls while inducing RST packets on closed target ports."
+                    ),
+                    "recommended_response": "Drop invalid TCP flag packets at perimeter defense barrier.",
+                    "response_status":      "CONTAINMENT_ACTIVE (Safe Dry-Run)",
                 }
 
             # Check for unauthorized probes to sensitive administrative ports (Telnet 23, SMB 445, RDP 3389)
@@ -312,15 +360,25 @@ class ThreatDetector:
                 if state.seconds_since_last_alert(alert_key) >= self._cooldown:
                     state.record_alert(alert_key)
                     return {
-                        "threat_type":      "SUSPICIOUS",
-                        "src_ip":           src_ip,
-                        "dst_ip":           meta.get("dst_ip"),
-                        "src_port":         meta.get("src_port"),
-                        "dst_port":         dst_port,
-                        "protocol":         "TCP",
-                        "count":            1,
-                        "severity":         "MEDIUM",
-                        "detection_reason": f"Inbound probe to sensitive administrative port {dst_port} detected.",
+                        "threat_type":          "SUSPICIOUS",
+                        "src_ip":               src_ip,
+                        "dst_ip":               meta.get("dst_ip"),
+                        "src_port":             meta.get("src_port"),
+                        "dst_port":             dst_port,
+                        "protocol":             "TCP",
+                        "count":                1,
+                        "severity":             "MEDIUM",
+                        "threshold":            1,
+                        "window_seconds":       1.0,
+                        "first_seen":           state.first_seen,
+                        "last_seen":            now_iso,
+                        "detection_reason":     f"Inbound probe to sensitive administrative port {dst_port} detected.",
+                        "simple_explanation":   (
+                            f"One simulated source ({src_ip}) attempted unauthorized access to sensitive service port {dst_port}."
+                        ),
+                        "technical_reason":     f"Direct probe to high-risk administrative port {dst_port}.",
+                        "recommended_response": "Block access to port and enforce perimeter isolation.",
+                        "response_status":      "CONTAINMENT_ACTIVE (Safe Dry-Run)",
                     }
 
         return None

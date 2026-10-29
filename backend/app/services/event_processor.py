@@ -91,13 +91,14 @@ async def process_detection(detection: dict, event_source: str = "simulation") -
     if _ws_broadcast:
         try:
             await _ws_broadcast({
-                "type":       "threat",
-                "threat_id":  threat_id,
-                "threat_type": detection["threat_type"],
-                "src_ip":     detection.get("src_ip"),
-                "severity":   detection["severity"],
-                "timestamp":  now,
+                "type":         "threat",
+                "threat_id":    threat_id,
+                "threat_type":  detection["threat_type"],
+                "src_ip":       detection.get("src_ip"),
+                "severity":     detection["severity"],
+                "timestamp":    now,
                 "event_source": event_source,
+                "details":      detection,
             })
         except Exception as exc:
             logger.warning("WebSocket broadcast failed: %s", exc)
