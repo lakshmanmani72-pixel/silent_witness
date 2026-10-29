@@ -1,17 +1,26 @@
 """
 SILENT WITNESS - Monitoring and Simulation Control API
 Endpoints for starting, stopping, and inspecting both Live Packet Capture
-and Educational Simulation modes.
+and Educational Simulation modes, including Wireshark-style packet ring buffers.
 """
 
 from __future__ import annotations
+
+import asyncio
 import logging
 from typing import Optional
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from app.services.simulator import get_simulator
-from app.services.packet_capture import get_capture, get_interfaces, SCAPY_AVAILABLE
+from app.services.packet_capture import (
+    get_capture,
+    get_interfaces,
+    get_interfaces_detailed,
+    get_best_interface,
+    resolve_interface,
+    SCAPY_AVAILABLE,
+)
 from app.services.threat_detector import get_detector
 from app.services.event_processor import process_detection
 
@@ -28,15 +37,24 @@ class SimulationControlPayload(BaseModel):
     speed: Optional[float] = 1.0
 
 
-# ── Live Monitoring Endpoints ───────────────────────────────────────────────
+class InjectTrafficPayload(BaseModel):
+    type: str = "normal"  # "syn_flood", "port_scan", "normal", "ping", "dns"
+    count: int = 15
+
+
+# ── Live Monitoring & Packet Dissection Endpoints ──────────────────────────
 
 @router.get("/monitoring/interfaces")
 async def list_network_interfaces():
-    """List available network interfaces for live capture, noting Scapy/Npcap availability."""
+    """List available network interfaces for live capture, with detailed hardware, IP, and MAC info."""
     interfaces = get_interfaces()
+    detailed = get_interfaces_detailed()
+    best = get_best_interface()
     return {
         "scapy_available": SCAPY_AVAILABLE,
         "interfaces": interfaces,
+        "interfaces_detailed": detailed,
+        "best_interface": best,
         "count": len(interfaces),
         "note": (
             "Live monitoring passively captures network metadata. "
@@ -44,6 +62,65 @@ async def list_network_interfaces():
             if not SCAPY_AVAILABLE or not interfaces
             else "Available for authorized local monitoring."
         )
+    }
+
+
+@router.get("/packets/recent")
+async def get_recent_packets(
+    limit: int = 100,
+    protocol: Optional[str] = None,
+    search: Optional[str] = None,
+):
+    """Return the recent packet capture ring buffer for Wireshark-style inspection."""
+    cap = get_capture()
+    packets = cap.get_recent_packets(limit=limit, protocol=protocol, search=search)
+    return {
+        "total_captured": cap.packets_captured,
+        "active": cap.active,
+        "interface": cap.interface,
+        "count": len(packets),
+        "packets": packets,
+    }
+
+
+@router.post("/packets/clear")
+async def clear_packet_buffer():
+    """Flush and clear the live packet ring buffer."""
+    cap = get_capture()
+    cap.clear_packets()
+    return {"message": "Packet buffer successfully cleared"}
+
+
+@router.post("/monitoring/inject-traffic")
+async def inject_test_traffic(payload: InjectTrafficPayload):
+    """
+    Synthesize and ingest test packets directly into the live inspection and detection pipeline.
+    Used for live demonstrations to illustrate instant threat detection and containment.
+    """
+    cap = get_capture()
+    detector = get_detector()
+    main_loop = asyncio.get_running_loop()
+
+    def _detector_cb(meta: dict):
+        det = detector.inspect_packet(meta)
+        if det:
+            cap.record_detection_stat(is_threat=True)
+            asyncio.run_coroutine_threadsafe(
+                process_detection(det, event_source="live"),
+                main_loop
+            )
+            return det
+        return None
+
+    injected = cap.inject_synthetic_traffic(
+        traffic_type=payload.type,
+        count=min(max(payload.count, 1), 100),
+        detector_callback=_detector_cb,
+    )
+    return {
+        "message": f"Successfully injected {len(injected)} {payload.type} test packets into inspection engine.",
+        "count": len(injected),
+        "type": payload.type,
     }
 
 
@@ -97,7 +174,6 @@ async def start_monitoring(payload: StartMonitoringPayload = StartMonitoringPayl
             detail="No network interfaces found. Ensure capture drivers are installed or use Simulation Mode."
         )
 
-    from app.services.packet_capture import get_best_interface, resolve_interface
     target_iface = payload.interface or get_best_interface() or (interfaces[0] if interfaces else "")
     resolved = resolve_interface(target_iface)
     if (target_iface not in interfaces) and (resolved == target_iface):
@@ -107,9 +183,6 @@ async def start_monitoring(payload: StartMonitoringPayload = StartMonitoringPayl
         )
 
     detector = get_detector()
-
-    # Callback called for each packet metadata in the capture thread
-    import asyncio
     main_loop = asyncio.get_running_loop()
 
     def on_packet_metadata(meta: dict):
@@ -120,6 +193,8 @@ async def start_monitoring(payload: StartMonitoringPayload = StartMonitoringPayl
                 process_detection(detection, event_source="live"),
                 main_loop
             )
+            return detection
+        return None
 
     try:
         cap.start(target_iface, on_packet_metadata)

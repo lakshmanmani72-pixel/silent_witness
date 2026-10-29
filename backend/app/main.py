@@ -17,7 +17,12 @@ from app.database import init_db, db_health
 from app.services.response_engine import get_response_engine
 from app.services.event_processor import set_ws_broadcaster
 from app.services.simulator import get_simulator
-from app.services.packet_capture import get_capture, get_best_interface, SCAPY_AVAILABLE
+from app.services.packet_capture import (
+    get_capture,
+    get_best_interface,
+    set_packet_broadcaster,
+    SCAPY_AVAILABLE,
+)
 from app.services.threat_detector import get_detector
 from app.services.event_processor import process_detection, record_traffic_stat
 
@@ -97,6 +102,7 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing SILENT WITNESS database and real-time defensive engine...")
     await init_db()
     set_ws_broadcaster(broadcast_ws_message)
+    set_packet_broadcaster(broadcast_ws_message)
 
     # Start block expiry and live telemetry background tasks
     expiry_task = asyncio.create_task(_expiry_worker(), name="block_expiry_worker")
@@ -119,6 +125,8 @@ async def lifespan(app: FastAPI):
                         process_detection(detection, event_source="live"),
                         main_loop
                     )
+                    return detection
+                return None
 
             cap.start(best_iface, on_packet_metadata)
             logger.info("LIVE Real-Time Network Packet Capture ACTIVE on '%s'", best_iface)
@@ -145,6 +153,7 @@ async def lifespan(app: FastAPI):
     if cap.active:
         cap.stop()
 
+    sim = get_simulator()
     if sim.status["running"]:
         await sim.stop()
 
